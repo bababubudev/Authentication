@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
-import FormInput from "../components/FormInput";
+import FormInput from "./FormInput";
 import { InputParams } from "../interfaces/FormInterface";
 
 export const USERNAME_REGEX = "^[a-zA-Z0-9_\\-]{3,16}$";
@@ -13,7 +13,7 @@ interface SignUpInterface {
 	[key: string]: string;
 }
 
-function UserActionPage() {
+function UserAction() {
 	const submitBtnRef = useRef<HTMLButtonElement>(null);
 	const emptyField: SignUpInterface = {
 		username: "",
@@ -37,8 +37,8 @@ function UserActionPage() {
 			required: true,
 			errors: [
 				"Must be 3-16 characters",
-				"No Special characters",
-				"[ - ] or [ _ ] allowed"
+				"[ - ] or [ _ ] allowed",
+				"No Special characters"
 			],
 		},
 		{
@@ -119,4 +119,4 @@ function UserActionPage() {
 	);
 }
 
-export default UserActionPage;
+export default UserAction;

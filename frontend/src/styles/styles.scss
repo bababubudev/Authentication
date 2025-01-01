@@ -1,5 +1,31 @@
-@use "./components/userAction.scss";
-@use "./components/formInput.scss";
+@use "./components/UserAction.scss";
+@use "./components/FormInput.scss";
+@use "./pages/HomePage.scss";
+@use "./components/Header.scss";
+
+@function generate-color-vars($name, $col1, $col2, $col3, $col4) {
+  @return ("--col-#{$name}": $col1,
+    "--col-#{$name}-container": $col2,
+    "--col-on-#{$name}": $col3,
+    "--col-on-#{$name}-container": $col4);
+}
+
+@mixin apply-color-vars($colors) {
+  @each $key, $value in $colors {
+    #{$key}: #{$value};
+  }
+}
+
+:root {
+  @include apply-color-vars(generate-color-vars("primary", #6750A4, #4F378B, #381E72, #EADDFF));
+  @include apply-color-vars(generate-color-vars("secondary", #CCC2DC, #4A4458, #332D41, #E8DEF8));
+  @include apply-color-vars(generate-color-vars("tertiary", #EFB8C8, #633B48, #492532, #FFD8E4));
+  @include apply-color-vars(generate-color-vars("error", #F2B8B5, #8C1D18, #601410, #F9DEDC));
+  @include apply-color-vars(generate-color-vars("surface", #141218, #1D1B20, #E6E0E9, #0F0D13));
+
+  --col-outline: #938F99;
+  --col-outline-variant: #49454F;
+}
 
 * {
   font-family:
@@ -12,15 +38,17 @@
   box-sizing: border-box;
 }
 
-.app {
+body {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100svh;
+  color: var(--col-primary);
 
   background:
     linear-gradient(to top, rgba(0, 0, 0, 0.7), 30%, rgba(0, 0, 0, 0.3)),
-    url(../assets/abstract_bg.jpg);
+    url(/abstract_bg.jpg);
+
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
