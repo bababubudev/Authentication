@@ -1,9 +1,10 @@
+@use "../components/UserAction.scss";
+@use "../components/FormInput.scss";
+
 .user-options {
   display: grid;
   gap: 1rem;
   padding: 1rem;
-
-  backdrop-filter: blur(10px);
 
   >button {
     padding: 1rem 2rem;

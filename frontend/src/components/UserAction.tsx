@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import FormInput from "./FormInput";
 import { InputParams } from "../interfaces/FormInterface";
 
@@ -14,7 +14,7 @@ interface SignUpInterface {
 }
 
 function UserAction() {
-	const submitBtnRef = useRef<HTMLButtonElement>(null);
+
 	const emptyField: SignUpInterface = {
 		username: "",
 		email: "",
@@ -23,6 +23,8 @@ function UserAction() {
 	}
 
 	const [formValues, setFormValues] = useState<SignUpInterface>(emptyField);
+
+	const isFormIncomplete = Object.values(formValues).some((value) => value.trim() === "");
 
 	const inputObjects: InputParams[] = [
 		{
@@ -84,14 +86,8 @@ function UserAction() {
 		e.preventDefault();
 		const rawData = new FormData(e.target as HTMLFormElement);
 		const data = Object.fromEntries(rawData.entries());
-		const currentBtn = submitBtnRef.current;
 
-		if (data && currentBtn) {
-			currentBtn.textContent = "Submitted ✔";
-			currentBtn.style.color = "green";
-			currentBtn.style.background = "rbga(256, 256, 256, 0.3)";
-			currentBtn.style.backdropFilter = "blur(10px)";
-		}
+		console.log(data);
 	}
 
 	function handleChange(e: ChangeEvent<HTMLInputElement>): void {
@@ -111,7 +107,10 @@ function UserAction() {
 						handleChange={handleChange}
 					/>
 				))}
-				<button type="submit" ref={submitBtnRef}>
+				<button
+					type="submit"
+					disabled={isFormIncomplete}
+				>
 					Submit
 				</button>
 			</form>

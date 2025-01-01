@@ -1,4 +1,5 @@
 import Header from "../components/Header";
+import UserAction from "../components/UserAction";
 
 function HomePage() {
   return (
@@ -8,6 +9,7 @@ function HomePage() {
         <button type="button">Login</button>
         <button type="button">Register</button>
       </div>
+      <UserAction />
     </>
   );
 }

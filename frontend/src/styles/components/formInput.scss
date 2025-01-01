@@ -13,14 +13,13 @@
     font-size: 1em;
     border-radius: .5ch;
     border: none;
-
     padding: 1rem;
 
-    &:invalid[data-was-focused="true"] {
-      border: 2px solid red;
+    &[data-was-focused="true"]:invalid {
+      border: 2px solid var(--col-error);
       outline: none;
 
-      &~ul {
+      &~.info-box {
         display: block;
       }
     }
@@ -30,8 +29,8 @@
     position: relative;
     display: none;
 
-    color: red;
-    background-color: rgba(255, 255, 255, 0.2);
+    color: var(--col-on-error-container);
+    background-color: var(--col-error-container-faded);
     border-radius: 0 1ch 1ch 1ch;
 
     padding-inline: 3ch;
@@ -40,7 +39,7 @@
 
     li {
       font-size: 0.9em;
-      text-shadow: -1px 1px black;
+      text-shadow: -1px 1px var(--col-surface);
     }
 
     button {
@@ -57,7 +56,7 @@
       cursor: pointer;
 
       svg {
-        color: red;
+        color: var(--col-on-error-container);
       }
     }
   }

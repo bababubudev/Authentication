@@ -11,6 +11,12 @@ function FormInput(prop: FormInputParams) {
 	const [focused, setFocused] = useState<boolean>(false);
 	const { id, label, value, errors, handleChange, ...inputProps } = prop;
 
+	const handleBlur = () => {
+		if (value.trim() !== "") {
+			setFocused(true);
+		}
+	}
+
 	return (
 		<div className="input-wrapper">
 			<label>{label}</label>
@@ -19,7 +25,7 @@ function FormInput(prop: FormInputParams) {
 				{...inputProps}
 				value={value}
 				onChange={handleChange}
-				onBlur={() => setFocused(true)}
+				onBlur={handleBlur}
 				onFocus={() => { inputProps.name === "confirmPassword" && setFocused(true) }}
 				data-was-focused={focused.toString()}
 			/>
