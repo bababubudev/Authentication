@@ -3,7 +3,7 @@ import FormInput from "./FormInput";
 import { InputParams } from "../interfaces/FormInterface";
 
 export const USERNAME_REGEX = "^[a-zA-Z0-9_\\-]{3,16}$";
-export const PASSWORD_REGEX = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[-_!@#$%]).{8,24}$"
+export const PASSWORD_REGEX = "^(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$"
 
 interface SignUpInterface {
 	username: string;

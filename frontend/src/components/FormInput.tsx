@@ -15,7 +15,7 @@ function FormInput(prop: FormInputParams) {
 		if (value.trim() !== "") {
 			setFocused(true);
 		}
-	}
+	};
 
 	return (
 		<div className="input-wrapper">
