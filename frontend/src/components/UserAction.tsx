@@ -2,8 +2,9 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import FormInput from "./FormInput";
 import { InputParams, LoginInterface, SignUpInterface } from "../types/FormInterface";
 
-export const USERNAME_REGEX = "^[a-zA-Z0-9_\\-]{3,16}$";
-export const PASSWORD_REGEX = "^(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$";
+const USERNAME_REGEX = "^[a-zA-Z0-9_\\-]{3,16}$";
+const PASSWORD_REGEX = "^(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$";
+const BASE_URL = "http://localhost:5500/api";
 
 function UserAction() {
 	const [isSignUp, setIsSignup] = useState<boolean>(false);
@@ -58,7 +59,7 @@ function UserAction() {
 			name: "password",
 			type: "password",
 			placeholder: "Password",
-			pattern: PASSWORD_REGEX,
+			pattern: isSignUp ? PASSWORD_REGEX : undefined,
 			required: true,
 			errors: [
 				"Must be atleast 8 characters long",
@@ -82,12 +83,46 @@ function UserAction() {
 
 	const filteredInputs = inputObjects.filter(input => isSignUp || ["username", "password"].includes(input.name));
 
-	function handleSubmit(e: FormEvent<HTMLFormElement>): void {
+	async function handleSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
 		e.preventDefault();
 		const rawData = new FormData(e.target as HTMLFormElement);
 		const data = Object.fromEntries(rawData.entries());
 
-		console.log(data);
+		const signupBody = JSON.stringify({
+			username: data.username,
+			password: data.password,
+			email: data.email,
+			confirmPassword: data.confirmPassword,
+		});
+
+		const loginBody = JSON.stringify({
+			username: data.username,
+			password: data.password,
+		});
+
+		const currentUrl = isSignUp ? "/users/register" : "/users/login"
+
+		try {
+			const response = await fetch(`${BASE_URL}${currentUrl}`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: isSignUp ? signupBody : loginBody,
+			});
+
+			const result = await response.json();
+
+			if (response.ok) {
+				console.log(result);
+			}
+			else {
+				console.log("Something went wrong!", response.statusText);
+			}
+		}
+		catch (err) {
+			console.log(err);
+		}
 	}
 
 	function handleChange(e: ChangeEvent<HTMLInputElement>): void {
