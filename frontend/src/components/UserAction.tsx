@@ -1,28 +1,26 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import FormInput from "./FormInput";
-import { InputParams } from "../interfaces/FormInterface";
+import { InputParams, LoginInterface, SignUpInterface } from "../types/FormInterface";
 
 export const USERNAME_REGEX = "^[a-zA-Z0-9_\\-]{3,16}$";
-export const PASSWORD_REGEX = "^(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$"
-
-interface SignUpInterface {
-	username: string;
-	email: string;
-	password: string;
-	confirmPassword: string;
-	[key: string]: string;
-}
+export const PASSWORD_REGEX = "^(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$";
 
 function UserAction() {
+	const [isSignUp, setIsSignup] = useState<boolean>(false);
 
-	const emptyField: SignUpInterface = {
+	const emptyLoginField: LoginInterface = {
+		username: "",
+		password: "",
+	};
+
+	const emptySignUpField: SignUpInterface = {
 		username: "",
 		email: "",
 		password: "",
 		confirmPassword: ""
-	}
+	};
 
-	const [formValues, setFormValues] = useState<SignUpInterface>(emptyField);
+	const [formValues, setFormValues] = useState<SignUpInterface | LoginInterface>(isSignUp ? emptySignUpField : emptyLoginField);
 
 	const isFormIncomplete = Object.values(formValues).some((value) => value.trim() === "");
 
@@ -63,7 +61,7 @@ function UserAction() {
 			pattern: PASSWORD_REGEX,
 			required: true,
 			errors: [
-				"Must be 8-24 characters long",
+				"Must be atleast 8 characters long",
 				"Must contain atleast one digit",
 				"Must contain atleast one special character",
 			],
@@ -80,7 +78,9 @@ function UserAction() {
 				"Password doesn't match"
 			],
 		}
-	]
+	];
+
+	const filteredInputs = inputObjects.filter(input => isSignUp || ["username", "password"].includes(input.name));
 
 	function handleSubmit(e: FormEvent<HTMLFormElement>): void {
 		e.preventDefault();
@@ -98,12 +98,13 @@ function UserAction() {
 	return (
 		<div className="user-action">
 			<form onSubmit={handleSubmit}>
-				<h1 className="form-title">Create an account</h1>
-				{inputObjects.map((input) => (
+				<h1 className="form-title">{isSignUp ? "Create new account" : "Sign in"}</h1>
+				{filteredInputs.map((input) => (
 					<FormInput
 						key={input.id}
 						{...input}
-						value={formValues[input.name]}
+						value={formValues[input.name as keyof typeof formValues]}
+						requiresValidation={isSignUp}
 						handleChange={handleChange}
 					/>
 				))}
@@ -114,7 +115,10 @@ function UserAction() {
 					Submit
 				</button>
 			</form>
-		</div>
+			<div className="linker" onClick={() => setIsSignup(prev => !prev)}>
+				<p>{isSignUp ? "Already have an account? Login here." : "Register a new account."}</p>
+			</div>
+		</div >
 	);
 }
 

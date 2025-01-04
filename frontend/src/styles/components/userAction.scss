@@ -1,8 +1,11 @@
 .user-action {
   padding: 4rem 3rem;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(1rem);
   border-radius: 1ch;
+
+  display: grid;
+  gap: 1rem;
 
   form {
     display: grid;
@@ -11,7 +14,7 @@
   }
 
   h1 {
-    color: white;
+    color: var(--col-on-primary-container);
     text-shadow: 1px 1px 0 black;
     text-align: center;
   }
@@ -19,5 +22,16 @@
   button {
     font-size: 1em;
     padding: 1.5ch 0;
+  }
+
+  .linker {
+    p {
+      color: var(--col-primary);
+
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
   }
 }

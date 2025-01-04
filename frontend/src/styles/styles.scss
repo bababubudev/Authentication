@@ -42,8 +42,9 @@
 }
 
 body {
+  margin-top: 5rem;
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: center;
   height: 100svh;
   color: var(--col-primary);

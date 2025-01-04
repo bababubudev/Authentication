@@ -1,13 +1,2 @@
 @use "../components/UserAction.scss";
 @use "../components/FormInput.scss";
-
-.user-options {
-  display: grid;
-  gap: 1rem;
-  padding: 1rem;
-
-  >button {
-    padding: 1rem 2rem;
-    border-radius: 0.5rem;
-  }
-}
