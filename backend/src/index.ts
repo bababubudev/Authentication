@@ -1,3 +1,5 @@
+/// <reference path="./types/session.d.ts" />
+
 import dotenv from "dotenv";
 dotenv.config();
 

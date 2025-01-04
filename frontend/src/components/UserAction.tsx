@@ -4,7 +4,7 @@ import { InputParams, LoginInterface, SignUpInterface } from "../types/FormInter
 
 const USERNAME_REGEX = "^[a-zA-Z0-9_\\-]{3,16}$";
 const PASSWORD_REGEX = "^(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$";
-const BASE_URL = "http://localhost:5500/api";
+const BASE_URL = "http://localhost:6060/api";
 
 function UserAction() {
 	const [isSignUp, setIsSignup] = useState<boolean>(false);
@@ -96,7 +96,7 @@ function UserAction() {
 		});
 
 		const loginBody = JSON.stringify({
-			username: data.username,
+			email: data.email,
 			password: data.password,
 		});
 

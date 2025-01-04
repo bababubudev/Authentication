@@ -11,7 +11,8 @@ async function loginUser(req: Request, res: Response) {
 
   try {
     const { rows } = await pool.query(getUserByEmailQuery, [email]);
-    const user: user = rows[0];
+    const user = rows[0];
+    console.log(email);
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       res.status(401).json({ message: "Invalid username or password" });
