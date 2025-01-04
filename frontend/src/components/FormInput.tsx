@@ -4,7 +4,7 @@ import { CiMinimize1 } from "react-icons/ci";
 
 interface FormInputParams extends InputParams {
 	value: string;
-	requiresValidation: boolean;
+	requiresvalidation: boolean;
 	handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -28,7 +28,7 @@ function FormInput(prop: FormInputParams) {
 				onChange={handleChange}
 				onBlur={handleBlur}
 				onFocus={() => { inputProps.name === "confirmPassword" && setFocused(true) }}
-				data-was-focused={prop.requiresValidation && focused.toString()}
+				data-was-focused={prop.requiresvalidation && focused.toString()}
 			/>
 			<ul className="info-box">
 				{errors.map((err, i) => (

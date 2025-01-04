@@ -11,11 +11,12 @@ async function loginUser(req: Request, res: Response) {
 
   try {
     const { rows } = await pool.query(getUserByEmailQuery, [email]);
-    const user = rows[0];
+    const user: user = rows[0];
     console.log(email);
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       res.status(401).json({ message: "Invalid username or password" });
+      return;
     }
 
     req.session.user = {
@@ -24,10 +25,15 @@ async function loginUser(req: Request, res: Response) {
       email: user.email
     };
 
-    res.status(200).json({
-      message: "Login successful",
-      data: { id: user.id, username: user.username, email: user.email }
-    });
+    res.status(200)
+      .set({
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Expose-Headers": "Set-Cookie",
+      })
+      .json({
+        message: "Login successful",
+        data: { id: user.id, username: user.username, email: user.email }
+      });
   }
   catch (err) {
     console.error((err as Error).message);
@@ -37,13 +43,24 @@ async function loginUser(req: Request, res: Response) {
 
 function getLoggedUser(req: Request, res: Response) {
   if (!req.session.user) {
-    res.status(401).json({ message: "Unauthorized" });
+    res.status(401)
+      .set({
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Expose-Headers": "Set-Cookie",
+      })
+      .json({ message: "Unauthorized" });
+    return;
   }
 
-  res.status(200).json({
-    message: "User session retrieved",
-    data: req.session.user,
-  });
+  res.status(200)
+    .set({
+      "Access-Control-Allow-Credentials": "true",
+      "Access-Control-Expose-Headers": "Set-Cookie",
+    })
+    .json({
+      message: "User session retrieved",
+      data: req.session.user,
+    });
 }
 
 function logoutUser(req: Request, res: Response) {
@@ -83,6 +100,7 @@ async function registerUser(req: Request, res: Response) {
 
   if (errors.length > 0) {
     res.status(400).json({ message: "Error registering user.", data: errors });
+    return;
   }
 
   try {

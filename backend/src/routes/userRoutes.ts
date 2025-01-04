@@ -3,7 +3,7 @@ import { registerUser, loginUser, getLoggedUser, logoutUser } from "../controlle
 
 const userRoutes = express.Router();
 
-userRoutes.get("/login", getLoggedUser);
+userRoutes.get("/login/me", getLoggedUser);
 userRoutes.post("/login", loginUser);
 userRoutes.post("/register", registerUser);
 userRoutes.get("/logout", logoutUser);
