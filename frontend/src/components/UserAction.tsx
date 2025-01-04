@@ -10,7 +10,7 @@ function UserAction() {
 	const [isSignUp, setIsSignup] = useState<boolean>(false);
 
 	const emptyLoginField: LoginInterface = {
-		username: "",
+		email: "",
 		password: "",
 	};
 
@@ -81,7 +81,7 @@ function UserAction() {
 		}
 	];
 
-	const filteredInputs = inputObjects.filter(input => isSignUp || ["username", "password"].includes(input.name));
+	const filteredInputs = inputObjects.filter(input => isSignUp || ["email", "password"].includes(input.name));
 
 	async function handleSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
 		e.preventDefault();

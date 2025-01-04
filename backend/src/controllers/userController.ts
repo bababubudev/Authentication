@@ -1,13 +1,61 @@
 import { Request, Response } from "express";
-import pool from "../db/db";
+import pool from "../db/dbPool";
 import bcrypt from "bcrypt";
+
 import { isEmailValid, isPasswordValid, isUsernameValid } from "../utils/validation";
 import { createUserQuery, getUserByEmailQuery } from "../db/query";
+import { user } from "../types/user";
 
 async function loginUser(req: Request, res: Response) {
-  let { username, password } = req.body;
-  res.status(200).json({ message: "Login requested!", data: { username, password } });
+  let { email, password } = req.body;
+
+  try {
+    const { rows } = await pool.query(getUserByEmailQuery, [email]);
+    const user: user = rows[0];
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      res.status(401).json({ message: "Invalid username or password" });
+    }
+
+    req.session.user = {
+      id: user.id,
+      username: user.username,
+      email: user.email
+    };
+
+    res.status(200).json({
+      message: "Login successful",
+      data: { id: user.id, username: user.username, email: user.email }
+    });
+  }
+  catch (err) {
+    console.error((err as Error).message);
+    res.status(500).json({ message: "Server error" });
+  }
 }
+
+function getLoggedUser(req: Request, res: Response) {
+  if (!req.session.user) {
+    res.status(401).json({ message: "Unauthorized" });
+  }
+
+  res.status(200).json({
+    message: "User session retrieved",
+    data: req.session.user,
+  });
+}
+
+function logoutUser(req: Request, res: Response) {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Error destroying session: ", err);
+      res.status(500).json({ message: "Failed to log out :/" });
+    }
+
+    res.clearCookie("connect.sid");
+    res.status(200).json({ message: "Logged out successfully" });
+  });
+};
 
 async function registerUser(req: Request, res: Response) {
   let { username, email, password, confirmPassword } = req.body;
@@ -58,5 +106,8 @@ async function registerUser(req: Request, res: Response) {
 }
 
 export {
-  registerUser, loginUser
+  loginUser,
+  getLoggedUser,
+  logoutUser,
+  registerUser,
 }

@@ -7,12 +7,12 @@ export interface InputParams
 }
 
 export interface LoginInterface {
-  username: string;
+  email: string;
   password: string;
 }
 
 export interface SignUpInterface extends LoginInterface {
-  email: string;
+  username: string;
   confirmPassword: string;
   [key: string]: string;
 }
