@@ -117,7 +117,7 @@ function UserAction() {
 				console.log(result);
 			}
 			else {
-				console.log("Something went wrong!", response.statusText);
+				console.log("Failed to Register!", result);
 			}
 		}
 		catch (err) {
