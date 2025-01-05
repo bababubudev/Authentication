@@ -117,7 +117,7 @@ function UserAction() {
 				console.log(result);
 			}
 			else {
-				console.log("Failed to Register!", result);
+				console.log("Failed!", result);
 			}
 		}
 		catch (err) {
@@ -139,7 +139,7 @@ function UserAction() {
 						key={input.id}
 						{...input}
 						value={formValues[input.name as keyof typeof formValues]}
-						requiresvalidation={isSignUp.toString()}
+						requiresvalidation={`${isSignUp}`}
 						handleChange={handleChange}
 					/>
 				))}

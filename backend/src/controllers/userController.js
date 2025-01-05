@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 
 import { isEmailValid, isPasswordValid, isUsernameValid } from "../utils/validation.js";
 import { createUserQuery, getUserByEmailQuery } from "../db/query.js";
+import { jwtGenerator } from "../utils/jwtHelper.js";
 
 async function loginUser(req, res) {
   let { email, password } = req.body;
@@ -10,10 +11,11 @@ async function loginUser(req, res) {
   try {
     const { rows } = await pool.query(getUserByEmailQuery, [email]);
     const user = rows[0];
+
     console.log(
       "Login attempted with: ",
       email,
-      user ? "For: " + user : ""
+      user ? "\nFor: " + JSON.stringify({ username: user.username, email: user.email }) : ""
     );
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -21,11 +23,8 @@ async function loginUser(req, res) {
       return;
     }
 
-    req.session.user = {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-    };
+    const token = jwtGenerator({ user: user.id });
+    console.log("Generated token: " + token);
 
     res.status(200)
       .set({
@@ -34,7 +33,7 @@ async function loginUser(req, res) {
       })
       .json({
         message: "Login successful",
-        data: { id: user.id, username: user.username, email: user.email },
+        data: { token },
       });
   } catch (err) {
     console.error(err);
@@ -45,31 +44,6 @@ async function loginUser(req, res) {
 async function registerUser(req, res) {
   let { username, email, password, confirmPassword } = req.body;
 
-  let errors = [];
-
-  if (!username || !isUsernameValid(username)) {
-    errors.push("Username must be 3-16 characters long, and may include '-' or '_'.");
-  }
-
-  if (!email || !isEmailValid(email)) {
-    errors.push("Invalid email address");
-  }
-
-  if (!password || !isPasswordValid(password)) {
-    errors.push(
-      "Password must be at least 8 characters long, contain one digit, and one special character."
-    );
-  }
-
-  if (password !== confirmPassword) {
-    errors.push("Passwords do not match.");
-  }
-
-  if (errors.length > 0) {
-    res.status(400).json({ message: "Error registering user.", data: errors });
-    return;
-  }
-
   try {
     const { rows } = await pool.query(getUserByEmailQuery, [email]);
     if (rows.length > 0) {
@@ -79,13 +53,14 @@ async function registerUser(req, res) {
 
     const hasedPassword = await bcrypt.hash(password, 10);
     const idResult = await pool.query(createUserQuery + " RETURNING id", [username, email, hasedPassword]);
-    const id = idResult.rows[0];
+    const { id } = idResult.rows[0];
 
-    const jwtToken = jwtGenerator(id);
+    console.log(id);
+    const token = jwtGenerator({ user: id });
 
     res.status(201).json({
       message: "User registered!",
-      data: { id, username, email, jwtToken },
+      data: { id, token },
     });
   } catch (error) {
     console.error(error.message);
