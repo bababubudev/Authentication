@@ -1,6 +1,10 @@
-import { Pool } from "pg";
+import pkg from "pg";
+import dotenv from "dotenv";
 
-const isProduction: boolean = process.env.NODE_ENV === "production";
+dotenv.config();
+
+const { Pool } = pkg;
+const isProduction = process.env.NODE_ENV === "production";
 
 const user = process.env.DB_USER;
 const password = process.env.DB_PASSWORD;
@@ -10,7 +14,7 @@ const database = process.env.DB_NAME;
 
 const connectionString = `postgresql://${user}:${password}@${host}:${port}/${database}`;
 
-const pool: Pool = new Pool({
+const pool = new Pool({
   connectionString: isProduction ? process.env.DB_URL : connectionString,
 });
 

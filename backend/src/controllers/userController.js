@@ -1,18 +1,20 @@
-import { Request, Response } from "express";
-import pool from "../db/dbPool";
+import pool from "../db/dbPool.js";
 import bcrypt from "bcrypt";
 
-import { isEmailValid, isPasswordValid, isUsernameValid } from "../utils/validation";
-import { createUserQuery, getUserByEmailQuery } from "../db/query";
-import { user } from "../types/user";
+import { isEmailValid, isPasswordValid, isUsernameValid } from "../utils/validation.js";
+import { createUserQuery, getUserByEmailQuery } from "../db/query.js";
 
-async function loginUser(req: Request, res: Response) {
+async function loginUser(req, res) {
   let { email, password } = req.body;
 
   try {
     const { rows } = await pool.query(getUserByEmailQuery, [email]);
-    const user: user = rows[0];
-    console.log(email);
+    const user = rows[0];
+    console.log(
+      "Login attempted with: ",
+      email,
+      user ? "For: " + user : ""
+    );
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       res.status(401).json({ message: "Invalid username or password" });
@@ -22,7 +24,7 @@ async function loginUser(req: Request, res: Response) {
     req.session.user = {
       id: user.id,
       username: user.username,
-      email: user.email
+      email: user.email,
     };
 
     res.status(200)
@@ -32,53 +34,18 @@ async function loginUser(req: Request, res: Response) {
       })
       .json({
         message: "Login successful",
-        data: { id: user.id, username: user.username, email: user.email }
+        data: { id: user.id, username: user.username, email: user.email },
       });
-  }
-  catch (err) {
-    console.error((err as Error).message);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 }
 
-function getLoggedUser(req: Request, res: Response) {
-  if (!req.session.user) {
-    res.status(401)
-      .set({
-        "Access-Control-Allow-Credentials": "true",
-        "Access-Control-Expose-Headers": "Set-Cookie",
-      })
-      .json({ message: "Unauthorized" });
-    return;
-  }
-
-  res.status(200)
-    .set({
-      "Access-Control-Allow-Credentials": "true",
-      "Access-Control-Expose-Headers": "Set-Cookie",
-    })
-    .json({
-      message: "User session retrieved",
-      data: req.session.user,
-    });
-}
-
-function logoutUser(req: Request, res: Response) {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error("Error destroying session: ", err);
-      res.status(500).json({ message: "Failed to log out :/" });
-    }
-
-    res.clearCookie("connect.sid");
-    res.status(200).json({ message: "Logged out successfully" });
-  });
-};
-
-async function registerUser(req: Request, res: Response) {
+async function registerUser(req, res) {
   let { username, email, password, confirmPassword } = req.body;
 
-  let errors: string[] = [];
+  let errors = [];
 
   if (!username || !isUsernameValid(username)) {
     errors.push("Username must be 3-16 characters long, and may include '-' or '_'.");
@@ -111,22 +78,22 @@ async function registerUser(req: Request, res: Response) {
     }
 
     const hasedPassword = await bcrypt.hash(password, 10);
-    await pool.query(createUserQuery, [username, email, hasedPassword]);
+    const idResult = await pool.query(createUserQuery + " RETURNING id", [username, email, hasedPassword]);
+    const id = idResult.rows[0];
+
+    const jwtToken = jwtGenerator(id);
 
     res.status(201).json({
       message: "User registered!",
-      data: { username, email },
+      data: { id, username, email, jwtToken },
     });
-  }
-  catch (error) {
-    console.error((error as Error).message);
+  } catch (error) {
+    console.error(error.message);
     res.status(500).json({ message: "Server error" });
   }
 }
 
 export {
   loginUser,
-  getLoggedUser,
-  logoutUser,
   registerUser,
-}
+};

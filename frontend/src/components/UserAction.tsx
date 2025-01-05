@@ -139,7 +139,7 @@ function UserAction() {
 						key={input.id}
 						{...input}
 						value={formValues[input.name as keyof typeof formValues]}
-						requiresvalidation={isSignUp}
+						requiresvalidation={isSignUp.toString()}
 						handleChange={handleChange}
 					/>
 				))}
