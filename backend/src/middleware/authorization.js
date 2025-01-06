@@ -1,19 +1,29 @@
-import { jwtVerifier } from "../utils/jwtHelper";
+import { hashToken } from "../utils/sessionHelper.js";
+import { queries } from "../db/query.js";
+import pool from "../db/dbPool.js";
 
 export default async function authorize(req, res, next) {
   try {
-    const jwtToken = req.header("token");
+    const token = req.cookies.token;
 
-    if (!jwtToken) {
-      res.status(403).json({ message: "Unauthorized" });
+    if (!token) {
+      res.status(403).json({ message: "Not authenticated" });
       return;
     }
 
-    const payload = jwtVerifier(jwtToken)
-    req.user = payload.user;
+    const tokenHash = hashToken(token);
+    const { rows } = await pool(queries.validateSession, [tokenHash]);
+
+    if (!rows[0]) {
+      res.clearCookie("token");
+      res.status(403).json({ message: "Session expired" });
+    }
+
+    req.user = rows[0];
+    next();
   }
   catch (err) {
-    console.log(err);
-    return res.status(403).json({ message: "Unauthorized" });
+    res.clearCookie("token");
+    res.status(403).json({ message: "Unauthorized with error!", error: err.message });
   }
 }

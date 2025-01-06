@@ -8,12 +8,9 @@ function DashboardPage() {
   useEffect(() => {
     const fetchUsername = async () => {
       try {
-        const response = await fetch(BASE_URL, {
+        const response = await fetch(BASE_URL + "/", {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          credentials: "include"
+          headers: { token: localStorage.token },
         });
 
         if (!response.ok) {

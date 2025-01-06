@@ -1,8 +1,8 @@
 import pool from "../db/dbPool.js";
 
-export async function getDashboard(req, res) {
+export async function fetchUserdata(req, res) {
   try {
-    const userId = req.user?.id;
+    const userId = req.user;
     const user = await pool.query(
       "SELECT * FROM users WHERE id=$1",
       [userId]
