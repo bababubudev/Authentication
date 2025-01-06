@@ -13,9 +13,8 @@ app.use(cors({
 }));
 
 app.options("*", cors());
-
+app.use(cookieParser());
 app.use(express.json());
-app.use(cookieParser);
 
 app.use("/api/users", userRoutes);
 app.use("/api/dashboard", dashboardRoutes);

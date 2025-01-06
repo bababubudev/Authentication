@@ -1,12 +1,13 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import FormInput from "./FormInput";
 import { InputParams, LoginInterface, SignUpInterface } from "../types/FormInterface";
+import { useAuth } from "../context/AuthContext";
 
 const USERNAME_REGEX = "^[a-zA-Z0-9_\\-]{3,16}$";
 const PASSWORD_REGEX = "^(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$";
-const BASE_URL = "http://localhost:6060/api";
 
 function UserAction() {
+	const { login } = useAuth();
 	const [isSignUp, setIsSignup] = useState<boolean>(false);
 
 	const emptyLoginField: LoginInterface = {
@@ -88,41 +89,49 @@ function UserAction() {
 		const rawData = new FormData(e.target as HTMLFormElement);
 		const data = Object.fromEntries(rawData.entries());
 
-		const signupBody = JSON.stringify({
-			username: data.username,
-			password: data.password,
-			email: data.email,
-			confirmPassword: data.confirmPassword,
-		});
-
-		const loginBody = JSON.stringify({
-			email: data.email,
-			password: data.password,
-		});
-
-		const currentUrl = isSignUp ? "/users/register" : "/users/login"
-
 		try {
-			const response = await fetch(`${BASE_URL}${currentUrl}`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: isSignUp ? signupBody : loginBody,
-			});
-
-			const result = await response.json();
-
-			if (response.ok) {
-				console.log(result);
-			}
-			else {
-				console.log("Failed!", result);
-			}
+			await login(data.email as string, data.password as string);
 		}
 		catch (err) {
-			console.log(err);
+			console.error(err);
 		}
+
+		// const signupBody = JSON.stringify({
+		// 	username: data.username,
+		// 	password: data.password,
+		// 	email: data.email,
+		// 	confirmPassword: data.confirmPassword,
+		// });
+
+		// const loginBody = JSON.stringify({
+		// 	email: data.email,
+		// 	password: data.password,
+		// });
+
+		// const currentUrl = isSignUp ? "/users/register" : "/users/login"
+
+		// try {
+		// 	const response = await fetch(`${BASE_URL}${currentUrl}`, {
+		// 		method: "POST",
+		// 		headers: {
+		// 			"Content-Type": "application/json",
+		// 		},
+		// 		body: isSignUp ? signupBody : loginBody,
+		// 	});
+
+
+		// 	const result = await response.json();
+
+		// 	if (response.ok) {
+		// 		console.log(result);
+		// 	}
+		// 	else {
+		// 		console.log("Failed!", result);
+		// 	}
+		// }
+		// catch (err) {
+		// 	console.log(err);
+		// }
 	}
 
 	function handleChange(e: ChangeEvent<HTMLInputElement>): void {

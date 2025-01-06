@@ -1,11 +1,24 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
 import "./styles/styles.scss"
-import { RouterProvider } from "react-router-dom"
-import { router } from "./routerUtil.tsx"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { AuthProvider, ProtectedRoute } from "./context/AuthContext.tsx"
+import HomePage from "./pages/HomePage.tsx"
+import DashboardPage from "./pages/DashboardPage.tsx"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <React.StrictMode>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          } />
+        </Routes>
+      </AuthProvider>
+    </React.StrictMode>
+  </BrowserRouter>,
 )
