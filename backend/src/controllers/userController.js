@@ -115,38 +115,11 @@ async function logoutUser(req, res) {
 
 async function verifyUser(req, res) {
   try {
-    const token = req.cookies.token;
-
-    if (!token) {
-      res.status(403).json({ message: "Not authenticated" });
-      return;
-    }
-
-    const tokenHash = hashToken(token);
-    const { rows } = await pool.query(queries.validateSession, [tokenHash]);
-
-    if (!rows[0]) {
-      res.clearCookie("token");
-      res.status(403).json({ message: "Session expired" });
-      return;
-    }
-
-    const userData = {
-      id: rows[0].user_id,
-      username: rows[0].username,
-      email: rows[0].email,
-      role: rows[0].role
-    };
-
-    res.status(200).json({
-      message: "User verified!",
-      data: userData
-    });
+    return res.status(200).json({ message: "User verified!", data: req.user });
   }
   catch (err) {
     console.error(err);
-    res.clearCookie("token");
-    res.status(403).json({ message: "Unauthorized with error!", error: err.message });
+    return res.status(500).json({ message: "Server error" });
   }
 }
 

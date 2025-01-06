@@ -7,7 +7,7 @@ const USERNAME_REGEX = "^[a-zA-Z0-9_\\-]{3,16}$";
 const PASSWORD_REGEX = "^(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$";
 
 function UserAction() {
-	const { login } = useAuth();
+	const { login, register } = useAuth();
 	const [isSignUp, setIsSignup] = useState<boolean>(false);
 
 	const emptyLoginField: LoginInterface = {
@@ -90,7 +90,16 @@ function UserAction() {
 		const data = Object.fromEntries(rawData.entries());
 
 		try {
-			await login(data.email as string, data.password as string);
+			if (isSignUp) {
+				await register(
+					data.username as string,
+					data.email as string,
+					data.password as string,
+					data.confirmPassword as string
+				);
+			} else {
+				await login(data.email as string, data.password as string);
+			}
 		}
 		catch (err) {
 			console.error(err);
