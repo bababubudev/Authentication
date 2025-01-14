@@ -34,7 +34,8 @@
 
   .linker {
     p {
-      color: var(--col-primary);
+      margin-top: 1rem;
+      color: var(--col-on-primary-container);
 
       &:hover {
         text-decoration: underline;
