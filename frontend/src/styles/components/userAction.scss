@@ -7,6 +7,19 @@
   display: grid;
   gap: 1rem;
 
+  button {
+    font-size: 1em;
+    padding: 1.5ch 0;
+    border: none;
+    border-radius: 0.5rem;
+  }
+
+  .logout-btn {
+    padding: 1rem 3rem;
+  }
+}
+
+.logged-out {
   form {
     display: grid;
     gap: 2.5ch;
@@ -19,13 +32,6 @@
     text-align: center;
   }
 
-  button {
-    font-size: 1em;
-    padding: 1.5ch 0;
-    border: none;
-    border-radius: 0.5rem;
-  }
-
   .linker {
     p {
       color: var(--col-primary);
@@ -35,5 +41,23 @@
         cursor: pointer;
       }
     }
+  }
+}
+
+.logged-in {
+  display: grid;
+  gap: 1rem;
+
+  p {
+    padding: 1rem;
+    background-color: var(--col-tertiary-container);
+    color: var(--col-on-tertiary-container);
+
+    border-radius: 0.25rem;
+  }
+
+  button {
+    background-color: var(--col-primary-container);
+    color: var(--col-on-primary-container);
   }
 }

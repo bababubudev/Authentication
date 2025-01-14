@@ -5,7 +5,6 @@ import pool from "../db/dbPool.js";
 export default async function authorize(req, res, next) {
   try {
     const token = req.cookies.token;
-    console.log("Token: ", token);
 
     if (!token) {
       res.status(403).json({ message: "Not authenticated" });
@@ -21,7 +20,6 @@ export default async function authorize(req, res, next) {
       return;
     }
 
-    console.log(rows[0]);
     req.user = rows[0];
     next();
   }

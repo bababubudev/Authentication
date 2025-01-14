@@ -55,6 +55,7 @@ async function registerUser(req, res) {
 
   try {
     const { rows } = await pool.query(queries.getUserByEmail, [email]);
+
     if (rows.length > 0) {
       res.status(409).json({ message: "Email is already registered" });
       return;

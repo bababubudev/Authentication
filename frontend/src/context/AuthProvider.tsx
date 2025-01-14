@@ -1,19 +1,12 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { AuthContext } from "./AuthContext";
+import { useContext, useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
-interface AuthContextType {
-  isAuthenticated: boolean;
-  user: any | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string, confirmPassword: string) => Promise<void>;
-  logout: () => Promise<void>;
-  verifyAuth: () => Promise<void>;
-  error: string | null;
+interface AuthProviderProps {
+  children: React.ReactNode;
 }
 
-const AuthContext = createContext<AuthContextType>(null!);
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: AuthProviderProps) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -126,14 +119,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useContext(AuthContext);
+  const context = useContext(AuthContext);
 
-  if (!isAuthenticated) {
+  if (!context?.isAuthenticated) {
     return <Navigate to="/" />;
   }
 
   return <>{children}</>;
 }
-
-
-export const useAuth = () => useContext(AuthContext);

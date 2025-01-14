@@ -1,9 +1,9 @@
 import express from "express";
-import { fetchUserdata } from "../controllers/dashboardController.js";
+import { getUserData } from "../controllers/dashboardController.js";
 import authorize from "../middleware/authorization.js";
 
 const dashboardRoutes = express.Router();
 
-dashboardRoutes.get("/", authorize, fetchUserdata);
+dashboardRoutes.get("/", authorize, getUserData);
 
 export default dashboardRoutes;

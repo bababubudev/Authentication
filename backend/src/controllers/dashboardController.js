@@ -1,6 +1,6 @@
 import pool from "../db/dbPool.js";
 
-export async function fetchUserdata(req, res) {
+export async function getUserData(req, res) {
   try {
     const userId = req.user;
     const user = await pool.query(
@@ -9,7 +9,6 @@ export async function fetchUserdata(req, res) {
     );
 
     const data = user.rows[0];
-    console.log("Sending data: " + data);
     res.status(200).json({ message: "User data fetched", data: data });
   }
   catch (err) {

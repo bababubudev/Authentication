@@ -27,5 +27,5 @@ export const queries = {
   deleteSession: `
     DELETE FROM sessions
     WHERE token_hash = $1
-  `
+  `,
 };

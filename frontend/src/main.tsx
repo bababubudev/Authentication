@@ -2,7 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom/client"
 import "./styles/styles.scss"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { AuthProvider, ProtectedRoute } from "./context/AuthContext.tsx"
+import { AuthProvider, ProtectedRoute } from "./context/AuthProvider.tsx"
 import HomePage from "./pages/HomePage.tsx"
 import DashboardPage from "./pages/DashboardPage.tsx"
 
