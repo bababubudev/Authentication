@@ -3,21 +3,56 @@
   gap: 2rem;
   margin: 0 5rem;
 
+  .heading {
+    display: flex;
+    justify-content: space-between;
 
-  h1 {
-    color: var(--col-on-primary);
-    background-color: var(--col-primary);
+    margin-top: 5rem;
     padding: 1rem 2rem;
     border-radius: 0.5rem;
+    background-color: var(--col-primary);
+    color: var(--col-on-primary);
+
+    button {
+      background: var(--col-primary-container);
+      color: var(--col-on-primary-container);
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0 1rem;
+    }
   }
 
   .details {
     color: var(--col-on-secondary);
-    background: var(--col-secondary);
-    padding: 1rem 2rem;
+    background: var(--col-secondary-faded);
+    backdrop-filter: blur(10rem);
+
+    padding: 2rem;
 
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
     gap: 1rem;
+
+    border-radius: 0.5rem;
+    border: 1px solid var(--col-primary);
+
+    >div {
+      display: grid;
+      gap: 0.25rem;
+      padding: 1rem;
+    }
+
+    button {
+      background: var(--col-secondary-container);
+      color: var(--col-on-secondary-container);
+      border: none;
+      border-radius: 0.5rem;
+
+      align-self: center;
+      justify-self: start;
+
+      padding: 1rem;
+      margin-left: 0.75rem;
+    }
   }
 }

@@ -16,6 +16,8 @@ async function loginUser(req, res) {
       return;
     }
 
+    await pool.query(queries.updateLastLogin, [user.id]);
+
     const token = generateToken();
     const tokenHash = hashToken(token);
     console.log("Generated token: " + tokenHash);

@@ -10,6 +10,12 @@ export const queries = {
     WHERE email = $1 AND is_active = true
   `,
 
+  updateLastLogin: `
+    UPDATE users
+    SET last_login = CURRENT_TIMESTAMP
+    WHERE id = $1
+  `,
+
   createSession: `
     INSERT INTO sessions (user_id, token_hash, expires_at, ip_address, user_agent)
     VALUES ($1, $2, $3, $4, $5)
@@ -17,7 +23,15 @@ export const queries = {
   `,
 
   validateSession: `
-    SELECT s.*, u.id as user_id, u.username, u.email, u.role
+    SELECT
+    s.token_hash,
+    u.id as user_id,
+    u.username,
+    u.email,
+    u.role,
+    u.is_email_verified,
+    u.created_at,
+    u.last_login
     FROM sessions s
     JOIN users u ON s.user_id = u.id
     WHERE s.token_hash = $1

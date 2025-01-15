@@ -2,12 +2,13 @@ import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import FormInput from "./FormInput";
 import { InputParams, LoginInterface, SignUpInterface } from "../types/FormInterface";
 import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 const USERNAME_REGEX = "^[a-zA-Z0-9_\\-]{3,16}$";
 const PASSWORD_REGEX = "^(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$";
 
 function UserAction() {
-	const { isAuthenticated, user, login, register, logout } = useAuth();
+	const { isAuthenticated, user, login, register } = useAuth();
 	const [isSignUp, setIsSignup] = useState<boolean>(false);
 
 	const emptyLoginField: LoginInterface = useMemo(() => ({
@@ -139,12 +140,12 @@ function UserAction() {
 				</div> :
 				<div className="logged-in">
 					<p>Logged in as {user?.username}</p>
-					<button
+					<Link
 						className="logout-btn"
-						onClick={logout}
+						to={"/dashboard"}
 					>
-						Log out
-					</button>
+						Dashboard
+					</Link>
 				</div>
 			}
 		</div >
