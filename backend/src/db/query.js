@@ -10,6 +10,18 @@ export const queries = {
     WHERE email = $1 AND is_active = true
   `,
 
+  updatePassword: `
+    UPDATE users
+    SET password = $1, updated_at = CURRENT_TIMESTAMP
+    WHERE id = $2
+    RETURNING id
+  `,
+
+  validatePassword: `
+    SELECT password
+    FROM users WHERE id = $1
+  `,
+
   updateLastLogin: `
     UPDATE users
     SET last_login = CURRENT_TIMESTAMP

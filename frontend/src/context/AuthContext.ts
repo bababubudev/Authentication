@@ -5,6 +5,7 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string, confirmPassword: string) => Promise<void>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
   logout: () => Promise<void>;
   verifyAuth: () => Promise<void>;
   error: string | null;

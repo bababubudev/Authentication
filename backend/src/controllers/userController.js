@@ -123,9 +123,36 @@ async function verifyUser(req, res) {
   }
 }
 
+async function changePassword(req, res) {
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user.user_id;
+
+  try {
+    const { rows } = await pool.query(queries.validatePassword, [userId]);
+    const user = rows[0];
+
+    console.log("user: ", user);
+    const isValidPassword = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isValidPassword) {
+      return res.status(401).json({ message: "Current password is incorrect" });
+    }
+
+    const hasedPassword = await bcrypt.hash(newPassword, 12);
+    await pool.query(queries.updatePassword, [hasedPassword, userId]);
+
+    res.status(200).json({ message: "Password updated succesfully" });
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 export {
   loginUser,
   registerUser,
   logoutUser,
   verifyUser,
+  changePassword,
 };

@@ -7,6 +7,8 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const BASEURL = "http://localhost:6060/api/users";
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -14,7 +16,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const verifyAuth = async () => {
     try {
-      const response = await fetch("http://localhost:6060/api/users/verify", {
+      const response = await fetch(BASEURL + "/verify", {
         credentials: "include",
       });
 
@@ -36,7 +38,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch("http://localhost:6060/api/users/login", {
+      const response = await fetch(BASEURL + "/login", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -62,7 +64,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const register = async (username: string, email: string, password: string, confirmPassword: string) => {
     try {
       setError(null);
-      const response = await fetch("http://localhost:6060/api/users/register", {
+      const response = await fetch(BASEURL + "/register", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -81,6 +83,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
     catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
+      throw err;
+    }
+  };
+
+  const changePassword = async (currentPassword: string, newPassword: string) => {
+    try {
+      const response = await fetch(BASEURL + "/change-password", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Password change failed");
       throw err;
     }
   };
@@ -109,6 +131,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       user,
       login,
       register,
+      changePassword,
       logout,
       verifyAuth,
       error

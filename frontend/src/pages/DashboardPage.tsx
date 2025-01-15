@@ -1,7 +1,11 @@
+import { useState } from "react";
+import ChangePassword from "../components/ChangePassword";
 import Header from "../components/Header";
 import { useAuth } from "../context/AuthContext";
 
 function DashboardPage() {
+  const [passwordChangeShown, setPasswordChangeShown] = useState<boolean>(false);
+
   const { user, logout } = useAuth();
   const createdDate = user?.created_at ? new Date(user.created_at) : new Date();
   const lastLogin = user?.last_login ? new Date(user.last_login) : null;
@@ -35,10 +39,14 @@ function DashboardPage() {
             <h4>Last login</h4>
             <p>{lastLogin === null ? "N/A" : lastLogin.toDateString()}</p>
           </div>
-          <button>
+          <button onClick={() => setPasswordChangeShown(true)}>
             <h4>Change password</h4>
           </button>
         </div>
+        <ChangePassword
+          isShown={passwordChangeShown}
+          setShown={setPasswordChangeShown}
+        />
       </div>
     </>
   );
