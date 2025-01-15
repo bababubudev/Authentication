@@ -1,4 +1,5 @@
 @use "./pages/HomePage.scss";
+@use "./pages/DashboardPage.scss";
 @use "./components/Header.scss";
 
 @function generate-color-vars($name, $col1, $col2, $col3, $col4) {
@@ -7,10 +8,10 @@
     "--col-on-#{$name}": $col3,
     "--col-on-#{$name}-container": $col4,
 
-    "--col-#{$name}-faded": rgba($col1, 0.5),
-    "--col-#{$name}-container-faded": rgba($col2, 0.5),
-    "--col-on-#{$name}-faded": rgba($col3, 0.5),
-    "--col-on-#{$name}-container-faded": rgba($col4, 0.5));
+    "--col-#{$name}-faded": rgba($col1, 0.4),
+    "--col-#{$name}-container-faded": rgba($col2, 0.4),
+    "--col-on-#{$name}-faded": rgba($col3, 0.4),
+    "--col-on-#{$name}-container-faded": rgba($col4, 0.4));
 }
 
 @mixin apply-color-vars($colors) {
@@ -20,14 +21,14 @@
 }
 
 :root {
-  @include apply-color-vars(generate-color-vars("primary", #6750A4, #4F378B, #381E72, #EADDFF));
-  @include apply-color-vars(generate-color-vars("secondary", #CCC2DC, #4A4458, #332D41, #E8DEF8));
-  @include apply-color-vars(generate-color-vars("tertiary", #EFB8C8, #633B48, #492532, #FFD8E4));
-  @include apply-color-vars(generate-color-vars("error", #F2B8B5, #8C1D18, #601410, #F9DEDC));
-  @include apply-color-vars(generate-color-vars("surface", #141218, #1D1B20, #E6E0E9, #0F0D13));
+  @include apply-color-vars(generate-color-vars("primary", #6750A4, #EADDFF, #FFFFFF, #4F378B));
+  @include apply-color-vars(generate-color-vars("secondary", #625B71, #E8DEF8, #FFFFFF, #4A4458));
+  @include apply-color-vars(generate-color-vars("tertiary", #7D5260, #FFD8E4, #FFFFFF, #633B48));
+  @include apply-color-vars(generate-color-vars("error", #B3261E, #B3261E, #FFFFFF, #8C1D18));
+  @include apply-color-vars(generate-color-vars("surface", #FEF7FF, #E6E0E9, #1D1B20, #F5EFF7));
 
-  --col-outline: #938F99;
-  --col-outline-variant: #49454F;
+  --col-outline: #79747E;
+  --col-outline-variant: #CAC4D0;
 }
 
 * {
@@ -43,9 +44,6 @@
 
 body {
   margin-top: 5rem;
-  display: flex;
-  align-items: start;
-  justify-content: center;
   height: 100svh;
   color: var(--col-primary);
 

@@ -1,0 +1,23 @@
+.dashboard {
+  display: grid;
+  gap: 2rem;
+  margin: 0 5rem;
+
+
+  h1 {
+    color: var(--col-on-primary);
+    background-color: var(--col-primary);
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+  }
+
+  .details {
+    color: var(--col-on-secondary);
+    background: var(--col-secondary);
+    padding: 1rem 2rem;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+    gap: 1rem;
+  }
+}

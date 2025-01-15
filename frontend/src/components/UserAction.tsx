@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import FormInput from "./FormInput";
 import { InputParams, LoginInterface, SignUpInterface } from "../types/FormInterface";
 import { useAuth } from "../context/AuthContext";
@@ -10,21 +10,19 @@ function UserAction() {
 	const { isAuthenticated, user, login, register, logout } = useAuth();
 	const [isSignUp, setIsSignup] = useState<boolean>(false);
 
-	const emptyLoginField: LoginInterface = {
+	const emptyLoginField: LoginInterface = useMemo(() => ({
 		email: "",
 		password: "",
-	};
+	}), []);
 
-	const emptySignUpField: SignUpInterface = {
+	const emptySignUpField: SignUpInterface = useMemo(() => ({
 		username: "",
 		email: "",
 		password: "",
 		confirmPassword: ""
-	};
+	}), []);
 
-	const [formValues, setFormValues] = useState<SignUpInterface | LoginInterface>(isSignUp ? emptySignUpField : emptyLoginField);
-
-	const isFormIncomplete = Object.values(formValues).some((value) => value.trim() === "");
+	const [formValues, setFormValues] = useState<SignUpInterface | LoginInterface>(emptyLoginField);
 
 	const inputObjects: InputParams[] = [
 		{
@@ -60,7 +58,7 @@ function UserAction() {
 			name: "password",
 			type: "password",
 			placeholder: "Password",
-			pattern: isSignUp ? PASSWORD_REGEX : undefined,
+			pattern: PASSWORD_REGEX,
 			required: true,
 			errors: [
 				"Must be atleast 8 characters long",
@@ -81,6 +79,10 @@ function UserAction() {
 			],
 		}
 	];
+
+	useEffect(() => {
+		setFormValues(isSignUp ? emptySignUpField : emptyLoginField);
+	}, [emptyLoginField, emptySignUpField, isSignUp]);
 
 	const filteredInputs = inputObjects.filter(input => isSignUp || ["email", "password"].includes(input.name));
 
@@ -121,13 +123,12 @@ function UserAction() {
 								key={input.id}
 								{...input}
 								value={formValues[input.name as keyof typeof formValues]}
-								requiresvalidation={`${isSignUp}`}
 								handleChange={handleChange}
+								showValidation={isSignUp}
 							/>
 						))}
 						<button
 							type="submit"
-							disabled={isFormIncomplete}
 						>
 							Submit
 						</button>

@@ -6,7 +6,7 @@ header {
 
   width: 100%;
 
-  background: var(--col-primary-container);
+  background: var(--col-primary);
 
   ul {
     display: flex;
@@ -18,7 +18,7 @@ header {
       padding: 1rem;
 
       a {
-        color: var(--col-on-primary-container);
+        color: var(--col-on-primary);
         text-decoration: none;
       }
     }

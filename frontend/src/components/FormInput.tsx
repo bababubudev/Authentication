@@ -4,16 +4,16 @@ import { CiMinimize1 } from "react-icons/ci";
 
 interface FormInputParams extends InputParams {
 	value: string;
-	requiresvalidation: string;
 	handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+	showValidation?: boolean;
 }
 
 function FormInput(prop: FormInputParams) {
 	const [focused, setFocused] = useState<boolean>(false);
-	const { id, label, value, errors, handleChange, ...inputProps } = prop;
+	const { id, label, value, errors, handleChange, showValidation = true, ...inputProps } = prop;
 
 	const handleBlur = () => {
-		if (value.trim() !== "") {
+		if (value.trim() !== "" && showValidation) {
 			setFocused(true);
 		}
 	};
@@ -24,24 +24,31 @@ function FormInput(prop: FormInputParams) {
 			<input
 				className="form-input"
 				{...inputProps}
+				{...(showValidation ? inputProps : {
+					...inputProps,
+					pattern: undefined,
+					required: undefined
+				})}
 				value={value}
 				onChange={handleChange}
 				onBlur={handleBlur}
-				onFocus={() => { inputProps.name === "confirmPassword" && setFocused(true) }}
-				data-was-focused={prop.requiresvalidation === "true" && focused.toString()}
+				onFocus={() => { inputProps.name === "confirmPassword" && showValidation && setFocused(true) }}
+				data-was-focused={(focused && showValidation).toString()}
 			/>
-			<ul className="info-box">
-				{errors.map((err, i) => (
-					<li key={i}>{err}</li>
-				))}
-				<button
-					type="button"
-					className="close-info"
-					onClick={() => setFocused(false)}
-				>
-					<CiMinimize1 />
-				</button>
-			</ul>
+			{showValidation && (
+				<ul className="info-box">
+					{errors.map((err, i) => (
+						<li key={i}>{err}</li>
+					))}
+					<button
+						type="button"
+						className="close-info"
+						onClick={() => setFocused(false)}
+					>
+						<CiMinimize1 />
+					</button>
+				</ul>
+			)}
 		</div>
 	);
 }

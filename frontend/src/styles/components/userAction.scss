@@ -5,7 +5,9 @@
   border-radius: 1ch;
 
   display: grid;
+  justify-content: center;
   gap: 1rem;
+  margin: 0 5rem;
 
   button {
     font-size: 1em;
@@ -27,15 +29,15 @@
   }
 
   h1 {
-    color: var(--col-on-primary-container);
-    text-shadow: 1px 1px 0 black;
+    color: var(--col-surface);
+    padding: 0.5rem 1rem;
     text-align: center;
   }
 
   .linker {
     p {
       margin-top: 1rem;
-      color: var(--col-on-primary-container);
+      color: var(--col-surface);
 
       &:hover {
         text-decoration: underline;
@@ -50,15 +52,17 @@
   gap: 1rem;
 
   p {
+    font-weight: 600;
     padding: 1rem;
-    background-color: var(--col-tertiary-container);
-    color: var(--col-on-tertiary-container);
+    background-color: var(--col-tertiary);
+    color: var(--col-on-tertiary);
 
     border-radius: 0.25rem;
   }
 
   button {
-    background-color: var(--col-primary-container);
-    color: var(--col-on-primary-container);
+    background-color: var(--col-primary);
+    color: var(--col-on-primary);
+    cursor: pointer;
   }
 }
