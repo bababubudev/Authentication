@@ -28,4 +28,9 @@ export const queries = {
     DELETE FROM sessions
     WHERE token_hash = $1
   `,
+
+  deleteExpiredQuery: `
+    DELETE FROM sessions
+    WHERE expires_at < NOW()
+  `,
 };
