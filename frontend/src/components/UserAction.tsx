@@ -23,7 +23,7 @@ function UserAction() {
 		confirmPassword: ""
 	}), []);
 
-	const [formValues, setFormValues] = useState<SignUpInterface | LoginInterface>(emptyLoginField);
+	const [formValues, setFormValues] = useState<SignUpInterface | LoginInterface>(emptySignUpField);
 
 	const inputObjects: InputParams[] = [
 		{

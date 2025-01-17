@@ -79,7 +79,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       setUser(data.data);
       setIsAuthenticated(true);
-      window.location.href = "/dashboard";
+      navigate("/dashboard");
     }
     catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
@@ -101,6 +101,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         throw new Error(error.message);
       }
 
+      navigate("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Password change failed");
       throw err;
@@ -117,7 +118,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     finally {
       setIsAuthenticated(false);
       setUser(null);
-      window.location.href = "/";
+      navigate("/");
     }
   };
 

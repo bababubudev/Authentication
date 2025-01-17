@@ -18,6 +18,7 @@ const PASSWORD_REGEX = "^(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$";
 
 function ChangePassword({ isShown, setShown }: ChangePasswordProp) {
   const { changePassword } = useAuth();
+
   const [formValues, setFormValues] = useState<PasswordFormValues>({
     currentPassword: "",
     newPassword: "",
@@ -32,7 +33,7 @@ function ChangePassword({ isShown, setShown }: ChangePasswordProp) {
       type: "password",
       placeholder: "Enter your current password",
       required: true,
-      errors: ["Please enter your current password"],
+      errors: ["Please enter your current password"]
     },
     {
       id: 2,
@@ -82,7 +83,6 @@ function ChangePassword({ isShown, setShown }: ChangePasswordProp) {
   return (
     <div className={`user-action change-password ${isShown ? "shown" : "hidden"}`}>
       <form onSubmit={handleSubmit}>
-        <button type="button" onClick={() => setShown(false)}>Cancel</button>
         <h1 className="form-title">Change Password</h1>
         {inputObjects.map((input) => (
           <FormInput
@@ -93,7 +93,8 @@ function ChangePassword({ isShown, setShown }: ChangePasswordProp) {
             showValidation={true}
           />
         ))}
-        <button type="submit">Change Password</button>
+        <button className="submit-btn" type="submit">Confirm</button>
+        <button className="cancel-btn" type="button" onClick={() => setShown(false)}>Cancel</button>
       </form>
     </div>
   );

@@ -43,6 +43,7 @@ export const queries = {
     u.role,
     u.is_email_verified,
     u.created_at,
+    u.updated_at,
     u.last_login
     FROM sessions s
     JOIN users u ON s.user_id = u.id
@@ -60,3 +61,19 @@ export const queries = {
     WHERE expires_at < NOW()
   `,
 };
+
+export const adminQueries = {
+  getAllUsers: `
+    SELECT * FROM users;
+  `,
+  getUserAuditLog: `
+    SELECT * FROM sessions
+    WHERE user_id = $1
+    ORDER BY created_at DESC,
+  `,
+  updateUserStatus: `
+    UPDATE users SET is_active = $1,
+    updated_at = CURRENT_TIMESTAMP
+    WHERE id = $2 RETURNING *
+  `,
+}

@@ -20,7 +20,6 @@ async function loginUser(req, res) {
 
     const token = generateToken();
     const tokenHash = hashToken(token);
-    console.log("Generated token: " + tokenHash);
 
     await pool.query(queries.createSession, [
       user.id,
@@ -37,7 +36,6 @@ async function loginUser(req, res) {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    console.log(user);
     res.status(200).json({
       message: "Login successful",
       data: { ...user }
@@ -131,7 +129,6 @@ async function changePassword(req, res) {
     const { rows } = await pool.query(queries.validatePassword, [userId]);
     const user = rows[0];
 
-    console.log("user: ", user);
     const isValidPassword = await bcrypt.compare(currentPassword, user.password);
 
     if (!isValidPassword) {

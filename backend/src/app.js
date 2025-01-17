@@ -3,7 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import userRoutes from "./routes/userRoutes.js";
-import dashboardRoutes from "./routes/dashboardRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 
 const app = express();
 
@@ -17,6 +17,6 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/users", userRoutes);
-app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/admin", adminRoutes);
 
 export default app;
