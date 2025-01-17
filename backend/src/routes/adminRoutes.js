@@ -1,6 +1,7 @@
 import express from "express";
-import { adminController, getUsers } from "../controllers/adminController.js";
+import { adminController } from "../controllers/adminController.js";
 import { requireAdmin } from "../middleware/adminMiddleware.js";
+import authorize from "../middleware/authorization.js";
 
 const adminRoutes = express.Router();
 

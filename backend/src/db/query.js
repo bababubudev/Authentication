@@ -42,6 +42,7 @@ export const queries = {
     u.email,
     u.role,
     u.is_email_verified,
+    u.is_active,
     u.created_at,
     u.updated_at,
     u.last_login
@@ -66,11 +67,13 @@ export const adminQueries = {
   getAllUsers: `
     SELECT * FROM users;
   `,
+
   getUserAuditLog: `
     SELECT * FROM sessions
     WHERE user_id = $1
-    ORDER BY created_at DESC,
+    ORDER BY created_at DESC
   `,
+
   updateUserStatus: `
     UPDATE users SET is_active = $1,
     updated_at = CURRENT_TIMESTAMP

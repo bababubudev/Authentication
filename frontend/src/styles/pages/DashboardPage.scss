@@ -1,60 +1,63 @@
 @use "../components/ChangePassword.scss";
 
 .dashboard {
-  display: grid;
-  gap: 2rem;
   margin: 0 5rem;
 
-  .heading {
-    display: flex;
-    justify-content: space-between;
-
-    margin-top: 5rem;
-    padding: 1rem 2rem;
-    border-radius: 0.5rem;
-    background-color: var(--col-primary);
-    color: var(--col-on-primary);
-
-    button {
-      background: var(--col-primary-container);
-      color: var(--col-on-primary-container);
-      border: none;
-      border-radius: 0.5rem;
-      padding: 0 1rem;
-    }
-  }
-
-  .details {
-    color: var(--col-on-secondary);
-    background: var(--col-secondary-faded);
-    backdrop-filter: blur(10rem);
-
-    padding: 2rem;
-
+  .user-dashboard,
+  .admin-dashboard {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
     gap: 1rem;
 
-    border-radius: 0.5rem;
-    border: 1px solid var(--col-primary);
+    .heading {
+      display: flex;
+      justify-content: space-between;
 
-    >div {
-      display: grid;
-      gap: 0.25rem;
-      padding: 1rem;
+      margin-top: 5rem;
+      padding: 1rem 2rem;
+      border-radius: 0.5rem;
+      background-color: var(--col-primary);
+      color: var(--col-on-primary);
+
+      button {
+        background: var(--col-primary-container);
+        color: var(--col-on-primary-container);
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0 1rem;
+      }
     }
 
-    button {
-      background: var(--col-secondary-container);
-      color: var(--col-on-secondary-container);
-      border: none;
+    .details {
+      color: var(--col-on-secondary);
+      background: var(--col-secondary-faded);
+      backdrop-filter: blur(10rem);
+
+      padding: 2rem;
+
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+
       border-radius: 0.5rem;
+      border: 1px solid var(--col-primary);
 
-      align-self: center;
-      justify-self: start;
+      >div {
+        display: grid;
+        gap: 0.25rem;
+        padding: 1rem;
+      }
 
-      padding: 1rem;
-      margin-left: 0.75rem;
+      button {
+        background: var(--col-secondary-container);
+        color: var(--col-on-secondary-container);
+        border: none;
+        border-radius: 0.5rem;
+
+        align-self: center;
+        justify-self: start;
+
+        padding: 1rem;
+        margin-left: 0.75rem;
+      }
     }
   }
 }
