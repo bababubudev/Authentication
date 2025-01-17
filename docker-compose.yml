@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - DB_USER=dai
+      - DB_PASSWORD=Bubumitho01.
+      - DB_HOST=localhost
+      - DB_NAME=nodelogin
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    restart: always
+    ports:
+      -"3001:3001"
+    volumes:
+      - ./backend:/usr/src/app
+    depends_on:
+      - postgres
+    environment:
+      - SERVER_PORT=6060
+      - CLIENT_URL=http://localhost:5173
+      - SESSION_SECRET=Daikokatiramrosessionsecret01.
+      - DB_USER=dai
+      - DB_PASSWORD=Bubumitho01.
+      - DB_HOST=localhost
+      - DB_NAME=nodelogin
+
+  frontend:
+    build: ./frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/usr/src/app
