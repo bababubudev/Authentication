@@ -1,6 +1,7 @@
 @use "./pages/HomePage.scss";
 @use "./pages/DashboardPage.scss";
 @use "./components/Header.scss";
+@use "./components/NotificationPopup.scss";
 
 @function generate-color-vars($name, $col1, $col2, $col3, $col4) {
   @return ("--col-#{$name}": $col1,

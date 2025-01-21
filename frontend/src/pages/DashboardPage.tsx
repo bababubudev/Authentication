@@ -3,6 +3,7 @@ import ChangePassword from "../components/ChangePassword";
 import { useAuth } from "../context/AuthContext";
 import UserDashboard from "../components/UserDashboard";
 import AdminDashboard from "../components/AdminDashboard";
+import NotificationPopup from "../components/NotificationPopup";
 
 function DashboardPage() {
   const [passwordChangeShown, setPasswordChangeShown] = useState<boolean>(false);
@@ -11,18 +12,19 @@ function DashboardPage() {
 
   return (
     <div className="dashboard">
-      {user?.role === "user" ?
-        <UserDashboard
+      {user?.role === "admin"
+        ? <AdminDashboard />
+        : <UserDashboard
           user={user}
           logout={logout}
           visiblePassword={setPasswordChangeShown}
-        /> :
-        <AdminDashboard />
+        />
       }
       <ChangePassword
         isShown={passwordChangeShown}
         setShown={setPasswordChangeShown}
       />
+      <NotificationPopup />
     </div>
   );
 }

@@ -1,0 +1,95 @@
+.notif-div {
+  position: absolute;
+  right: 5rem;
+  top: 2rem;
+
+  background: var(--col-on-surface-faded);
+  backdrop-filter: blur(1rem);
+  box-shadow: 0 4px 5rem var(--col-on-surface-faded);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 0 1rem;
+  border: 1px solid var(--col-primary);
+  border-radius: 0.5rem;
+
+  >p {
+    padding: 0.5rem 1rem;
+    color: var(--col-surface);
+
+    font-weight: 600;
+
+    text-align: left;
+    letter-spacing: 0.09rem;
+  }
+
+  svg {
+    font-size: 1.25rem;
+    color: var(--col-surface);
+  }
+
+  &.success {
+    border-color: var(--col-primary);
+
+    svg {
+      fill: var(--col-on-primary);
+    }
+  }
+
+  &.error {
+    border-color: var(--col-error);
+
+    svg {
+      fill: var(--col-on-error);
+    }
+  }
+
+  &.info {
+    border-color: var(--col-secondary);
+
+    svg {
+      fill: var(--col-on-secondary);
+    }
+  }
+
+  &.warn {
+    border-color: var(--col-tertiary);
+  }
+}
+
+.notif-div.fade-in {
+  animation: fadeInAnimation 0.5s ease-in-out forwards;
+  z-index: 10000;
+}
+
+.notif-div.fade-out {
+  animation: fadeOutAnimation 0.5s ease-in-out forwards;
+  z-index: 1;
+}
+
+
+@keyframes fadeInAnimation {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOutAnimation {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+}

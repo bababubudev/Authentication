@@ -1,6 +1,7 @@
 import { AuthContext } from "./AuthContext";
 import { useContext, useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { MessageType, Status } from "../types/Notification";
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -11,7 +12,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<MessageType | null>(null);
   const navigate = useNavigate();
 
   const verifyAuth = async () => {
@@ -29,6 +30,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setIsAuthenticated(false);
         setUser(null);
       }
+
+      setError(null);
     }
     catch (err) {
       setIsAuthenticated(false);
@@ -53,10 +56,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const data = await response.json();
       setUser(data.data);
       setIsAuthenticated(true);
-      navigate("/dashboard");
+      setError(null);
+      navigate("/dashboard", { state: { message: data.message, state: Status.Success } });
     }
     catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      const errMessage = err instanceof Error ? err.message : "Login failed";
+      setError({ message: errMessage, state: Status.Error });
       throw err;
     }
   };
@@ -79,21 +84,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       setUser(data.data);
       setIsAuthenticated(true);
-      navigate("/dashboard");
+      setError(null);
+
+      navigate("/", { state: { message: data.message, state: Status.Success } });
     }
     catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed");
+      const errMessage = err instanceof Error ? err.message : "Registration failed";
+      setError({ message: errMessage, state: Status.Warn });
       throw err;
     }
   };
 
-  const changePassword = async (currentPassword: string, newPassword: string) => {
+  const changePassword = async (currentPassword: string, newPassword: string, confirmPassword: string) => {
     try {
       const response = await fetch(BASEURL + "/change-password", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ currentPassword, newPassword }),
+        body: JSON.stringify({ currentPassword, password: newPassword, confirmPassword }),
       });
 
       if (!response.ok) {
@@ -101,24 +109,39 @@ export function AuthProvider({ children }: AuthProviderProps) {
         throw new Error(error.message);
       }
 
-      navigate("/");
+      navigate("/", { state: { message: "Password changed. User logged out", state: Status.Info } });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Password change failed");
+      const errMessage = err instanceof Error ? err.message : "Password change failed";
+      setError({ message: errMessage, state: Status.Error });
       throw err;
     }
   };
 
   const logout = async () => {
     try {
-      await fetch("http://localhost:6060/api/users/logout", {
+      const response = await fetch("http://localhost:6060/api/users/logout", {
         method: "POST",
         credentials: "include",
       });
+
+      if (response.ok) {
+        navigate("/", {
+          state: {
+            message: "Logged out successfully",
+            state: Status.Success
+          },
+          replace: true,
+        });
+
+        setTimeout(() => {
+          setIsAuthenticated(false);
+          setUser(null);
+        }, 0);
+      }
     }
-    finally {
-      setIsAuthenticated(false);
-      setUser(null);
-      navigate("/");
+    catch (err) {
+      const errMessage = err instanceof Error ? err.message : "Couldn't log out";
+      setError({ message: errMessage, state: Status.Error });
     }
   };
 

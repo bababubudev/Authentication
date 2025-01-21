@@ -60,4 +60,20 @@
       }
     }
   }
+
+  .admin-dashboard .details {
+    background: var(--col-on-surface-faded);
+    border-color: var(--col-outline);
+
+    grid-template-columns: none;
+
+    .user-management .user-details {
+      display: grid;
+      gap: 1rem;
+
+      .detailed-info {
+        justify-self: center;
+      }
+    }
+  }
 }

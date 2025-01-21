@@ -64,7 +64,12 @@ function ChangePassword({ isShown, setShown }: ChangePasswordProp) {
   async function handleSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
     try {
-      await changePassword(formValues.currentPassword, formValues.newPassword);
+      await changePassword(
+        formValues.currentPassword,
+        formValues.newPassword,
+        formValues.confirmPassword
+      );
+
       setFormValues({
         currentPassword: "",
         newPassword: "",

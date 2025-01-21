@@ -82,11 +82,7 @@ async function registerUser(req, res) {
 
     res.status(201).json({
       message: "User registered!",
-      data: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-      },
+      data: { ...user },
     });
   } catch (error) {
     console.error(error.message);
@@ -122,7 +118,7 @@ async function verifyUser(req, res) {
 }
 
 async function changePassword(req, res) {
-  const { currentPassword, newPassword } = req.body;
+  const { currentPassword, password } = req.body;
   const userId = req.user.user_id;
 
   try {
@@ -130,12 +126,11 @@ async function changePassword(req, res) {
     const user = rows[0];
 
     const isValidPassword = await bcrypt.compare(currentPassword, user.password);
-
     if (!isValidPassword) {
       return res.status(401).json({ message: "Current password is incorrect" });
     }
 
-    const hasedPassword = await bcrypt.hash(newPassword, 12);
+    const hasedPassword = await bcrypt.hash(password, 12);
     await pool.query(queries.updatePassword, [hasedPassword, userId]);
 
     res.status(200).json({ message: "Password updated succesfully" });

@@ -1,14 +1,15 @@
 import { createContext, useContext } from "react";
+import { MessageType } from "../types/Notification";
 
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string, confirmPassword: string) => Promise<void>;
-  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
+  changePassword: (currentPassword: string, newPassword: string, confirmPassword: string) => Promise<void>;
   logout: () => Promise<void>;
   verifyAuth: () => Promise<void>;
-  error: string | null;
+  error: MessageType | null;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

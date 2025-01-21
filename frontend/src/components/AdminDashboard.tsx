@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import UserDetailCard from "./UserDetailCard";
 
 function AdminDashboard() {
   const BASE_URL = "http://localhost:6060/api/admin";
@@ -7,7 +8,7 @@ function AdminDashboard() {
   const [users, setUsers] = useState<DefaultUser[]>([]);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [auditLog, setAuditLog] = useState<AuditLog[]>([]);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   const fetchUsers = async () => {
     try {
@@ -70,49 +71,39 @@ function AdminDashboard() {
 
   return (
     <div className="admin-dashboard">
-      <h1 className="heading">Admin Dashboard</h1>
+      <div className="heading">
+        <h1>Admin {user.username}'s Dashboard</h1>
+        <button onClick={() => logout()}>logout</button>
+      </div>
       <div className="details">
         <div className="user-management">
           <h2>User Management</h2>
-          <div className="users-detail">
+          <div className="user-details">
             {users.map(user => (
-              <div key={user.id}>
-                <div>
-                  <p>{user.username}</p>
-                  <p>{user.email}</p>
-                </div>
-                <div>
-                  <button
-                    onClick={() => toggleUserStatus(user.id, user.is_active)}
-                    className="toggle-status-btn"
-                  >
-                    {user.is_active ? "Deactivate" : "Activate"}
-                  </button>
-                  <button
-                    onClick={() => viewAuditLog(user.id)}
-                    className="show-audit-btn"
-                  >
-                    Audit log
-                  </button>
-                </div>
-              </div>
+              <UserDetailCard
+                key={user.id}
+                user={user}
+                toggleUserStatus={toggleUserStatus}
+                viewAuditLog={viewAuditLog}
+              />
             ))}
           </div>
         </div>
-        {selectedUser && (
-          <div className="user-audit-log">
-            <h2>User Audit Log</h2>
-            <div className="logs">
-              {auditLog.map(log => (
+        <div className="user-audit-log">
+          <h2>User Audit Log</h2>
+          <div className="logs">
+            {selectedUser && (auditLog.length > 0 ?
+              auditLog.map(log => (
                 <div key={log.id}>
                   <p>IP: {log.ip_address}</p>
                   <p>User Agent: {log.user_agent}</p>
                   <p>Created: {new Date(log.created_at).toLocaleString()}</p>
                 </div>
-              ))}
-            </div>
+              )) :
+              <p>Nothing in the audit</p>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

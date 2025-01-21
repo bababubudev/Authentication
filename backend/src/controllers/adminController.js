@@ -20,7 +20,8 @@ export const adminController = {
   },
 
   async updateUserStatus(req, res) {
-    const { userId, isActive } = req.body;
+    const userId = req.params.userId
+    const { isActive } = req.body;
 
     try {
       const { rows } = await pool.query(

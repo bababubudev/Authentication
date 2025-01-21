@@ -9,6 +9,7 @@ const PASSWORD_REGEX = "^(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$";
 
 function UserAction() {
 	const { isAuthenticated, user, login, register } = useAuth();
+
 	const [isSignUp, setIsSignup] = useState<boolean>(false);
 
 	const emptyLoginField: LoginInterface = useMemo(() => ({
@@ -105,6 +106,7 @@ function UserAction() {
 			}
 		}
 		catch (err) {
+			setIsSignup(false);
 			console.error(err);
 		}
 	}

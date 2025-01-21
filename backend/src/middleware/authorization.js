@@ -16,7 +16,7 @@ export default async function authorize(req, res, next) {
 
     if (!rows[0]) {
       res.clearCookie("token");
-      res.status(403).json({ message: "Session expired" });
+      res.status(403).json({ message: "Session expired. Try reloading the page." });
       return;
     }
 

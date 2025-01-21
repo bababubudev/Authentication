@@ -1,12 +1,12 @@
 import { isEmailValid, isPasswordValid, isUsernameValid } from "../utils/validation.js";
 
 export default function inputValidation(req, res, next) {
-  let { username, email, password, confirmPassword } = req.body;
+  let { username, email, password, confirmPassword, currentPassword } = req.body;
   let errors = [];
 
   if (req.path === "/register") {
     if (![username, email, password, confirmPassword].every(Boolean)) {
-      res.status(400).json({ message: "Missing entries" });
+      res.status(400).json({ message: "Missing fields" });
       return;
     }
 
@@ -37,12 +37,28 @@ export default function inputValidation(req, res, next) {
   }
   else if (req.path === "/login") {
     if (![email, password].every(Boolean)) {
-      res.status(400).json({ message: "Missing entries" });
+      res.status(400).json({ message: "Missing fields" });
       return;
     }
 
     if (!isEmailValid(email)) {
       res.status(422).json({ message: "Email format not valid." });
+      return;
+    }
+  }
+  else if (req.path === "/dashboard") {
+    if (![currentPassword, confirmPassword, password].every(Boolean)) {
+      res.status(400).json({ message: "Missing fields" });
+      return;
+    }
+
+    if (currentPassword === password) {
+      res.status(400).json({ message: "New password cannot be the same as old." });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      res.status(400).json({ message: "Passwords do not match." });
       return;
     }
   }
