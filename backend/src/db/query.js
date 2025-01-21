@@ -7,7 +7,13 @@ export const queries = {
 
   getUserByEmail: `
     SELECT * FROM users
-    WHERE email = $1 AND is_active = true
+    WHERE email=$1 AND is_active = true
+  `,
+
+  getUserByEmailOrUsername: `
+    SELECT * FROM users
+    WHERE (email = COALESCE($1, email) OR username = COALESCE($2, username))
+    AND is_active = true
   `,
 
   updatePassword: `

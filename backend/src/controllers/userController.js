@@ -3,12 +3,17 @@ import bcrypt from "bcrypt";
 
 import { hashToken, generateSessionExpiry, generateToken } from "../utils/sessionHelper.js";
 import { queries } from "../db/query.js";
+import { isEmailValid, isUsernameValid } from "../utils/validation.js";
 
 async function loginUser(req, res) {
-  let { email, password } = req.body;
+  let { emailOrUsername, password } = req.body;
 
   try {
-    const { rows } = await pool.query(queries.getUserByEmail, [email]);
+    const isEmail = isEmailValid(emailOrUsername);
+    const email = isEmail ? emailOrUsername : null;
+    const username = isEmail ? null : emailOrUsername;
+
+    const { rows } = await pool.query(queries.getUserByEmailOrUsername, [email, username]);
     const user = rows[0];
 
     if (!user || !(await bcrypt.compare(password, user.password))) {

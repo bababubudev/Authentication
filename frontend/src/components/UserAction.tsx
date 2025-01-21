@@ -45,9 +45,9 @@ function UserAction() {
 		},
 		{
 			id: 2,
-			label: "Email",
+			label: isSignUp ? "Email" : "Username or email",
 			name: "email",
-			type: "email",
+			type: isSignUp ? "email" : "text",
 			placeholder: "john.doe@example.com",
 			required: true,
 			errors: [
