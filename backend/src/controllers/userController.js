@@ -56,10 +56,10 @@ async function registerUser(req, res) {
   let { username, email, password } = req.body;
 
   try {
-    const { rows } = await pool.query(queries.getUserByEmail, [email]);
+    const { rows } = await pool.query(queries.getUserByEmailOrUsername, [email, username]);
 
     if (rows.length > 0) {
-      res.status(409).json({ message: "Email is already registered" });
+      res.status(409).json({ message: "Email or username is already registered" });
       return;
     }
 

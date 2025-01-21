@@ -106,7 +106,6 @@ function UserAction() {
 			}
 		}
 		catch (err) {
-			setIsSignup(false);
 			console.error(err);
 		}
 	}
