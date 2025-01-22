@@ -12,7 +12,8 @@ export const queries = {
 
   getUserByEmailOrUsername: `
     SELECT * FROM users
-    WHERE (email = COALESCE($1, email) OR username = COALESCE($2, username))
+    WHERE (email = $1 OR $1 IS NULL)
+    AND (username = $2 or $2 IS NULL)
     AND is_active = true
   `,
 
