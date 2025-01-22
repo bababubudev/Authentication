@@ -14,7 +14,6 @@ async function loginUser(req, res) {
     const username = isEmail ? null : emailOrUsername;
 
     const { rows } = await pool.query(queries.getUserByEmailOrUsername, [email, username]);
-    console.log(username, email, password, rows[0]);
     const user = rows[0];
 
     if (!user || !(await bcrypt.compare(password, user.password))) {

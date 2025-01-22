@@ -10,6 +10,7 @@ const PASSWORD_REGEX = "^(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$";
 function UserAction() {
 	const { isAuthenticated, user, login, register } = useAuth();
 
+	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [isSignUp, setIsSignup] = useState<boolean>(false);
 
 	const emptyLoginField: LoginInterface = useMemo(() => ({
@@ -60,7 +61,7 @@ function UserAction() {
 			name: "password",
 			type: "password",
 			placeholder: "Password",
-			pattern: PASSWORD_REGEX,
+			pattern: isSignUp ? PASSWORD_REGEX : undefined,
 			required: true,
 			errors: [
 				"Must be atleast 8 characters long",
@@ -114,37 +115,47 @@ function UserAction() {
 		setFormValues({ ...formValues, [e.target.name]: e.target.value });
 	}
 
+	function togglePasswordVisibility() {
+		setShowPassword(prev => !prev);
+	}
+
 	return (
 		<div className="user-action">
 			{!isAuthenticated ?
 				<div className="logged-out">
 					<form onSubmit={handleSubmit}>
 						<h1 className="form-title">{isSignUp ? "Create new account" : "Sign in"}</h1>
-						{filteredInputs.map((input) => (
-							<FormInput
-								key={input.id}
-								{...input}
-								value={formValues[input.name as keyof typeof formValues]}
-								handleChange={handleChange}
-								showValidation={isSignUp}
-							/>
-						))}
-						<button
-							type="submit"
-						>
-							Submit
-						</button>
+						{filteredInputs.map((input) => {
+							const isPasswordInput = ["password", "confirmPassword"].includes(input.name);
+							const inputType = isPasswordInput && showPassword ? "text" : input.type;
+
+							return (
+								<FormInput
+									key={input.id}
+									{...input}
+									type={inputType}
+									value={formValues[input.name as keyof typeof formValues]}
+									handleChange={handleChange}
+									showValidation={isSignUp}
+									showPassword={showPassword}
+									isPasswordInput={isPasswordInput}
+									togglePasswordVisibility={togglePasswordVisibility}
+								/>
+							);
+						})}
+						<button type="submit">Submit</button>
 					</form>
 					<div className="linker" onClick={() => setIsSignup(prev => !prev)}>
-						<p>{isSignUp ? "Already have an account? Login here." : "Register a new account."}</p>
+						<p>
+							{isSignUp
+								? "Already have an account? Login here."
+								: "Register a new account."}
+						</p>
 					</div>
 				</div> :
 				<div className="logged-in">
 					<p>Logged in as {user?.username}</p>
-					<Link
-						className="logout-btn"
-						to={"/dashboard"}
-					>
+					<Link className="logout-btn" to={"/dashboard"}>
 						Dashboard
 					</Link>
 				</div>

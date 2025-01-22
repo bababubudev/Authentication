@@ -1,4 +1,4 @@
-.input-wrapper {
+.form-wrapper {
   display: grid;
   gap: 0.5ch;
 
@@ -9,20 +9,43 @@
     letter-spacing: 0.05rem;
   }
 
-  input {
-    font-size: 1em;
-    border-radius: .5ch;
-    border: none;
-    padding: 1rem;
-    background-color: var(--col-surface);
-    color: var(--col-on-surface);
+  .input-wrapper {
+    position: relative;
+    display: grid;
 
-    &[data-was-focused="true"]:invalid {
-      border: 2px solid var(--col-error);
-      outline: none;
+    input {
+      font-size: 1rem;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 1rem;
 
-      &~.info-box {
-        display: block;
+      background-color: var(--col-surface);
+      color: var(--col-on-surface);
+
+      &[data-was-focused="true"]:invalid {
+        border: 1px solid var(--col-error);
+        outline: none;
+
+        &~.info-box {
+          display: block;
+        }
+      }
+    }
+
+    .password-toggle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      padding: 1rem;
+
+      background: none;
+      border: none;
+
+      svg {
+        font-size: 1.25rem;
+        opacity: 0.5;
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 1));
       }
     }
   }

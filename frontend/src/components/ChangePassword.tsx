@@ -19,6 +19,8 @@ const PASSWORD_REGEX = "^(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$";
 function ChangePassword({ isShown, setShown }: ChangePasswordProp) {
   const { changePassword } = useAuth();
 
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
   const [formValues, setFormValues] = useState<PasswordFormValues>({
     currentPassword: "",
     newPassword: "",
@@ -85,19 +87,32 @@ function ChangePassword({ isShown, setShown }: ChangePasswordProp) {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   }
 
+  function togglePasswordVisibility() {
+    setShowPassword(prev => !prev);
+  }
+
   return (
     <div className={`user-action change-password ${isShown ? "shown" : "hidden"}`}>
       <form onSubmit={handleSubmit}>
         <h1 className="form-title">Change Password</h1>
-        {inputObjects.map((input) => (
-          <FormInput
-            key={input.id}
-            {...input}
-            value={formValues[input.name as keyof typeof formValues]}
-            handleChange={handleChange}
-            showValidation={true}
-          />
-        ))}
+        {inputObjects.map((input) => {
+          const isPasswordInput = ["newPassword", "confirmPassword", "currentPassword"].includes(input.name);
+          const inputType = isPasswordInput && showPassword ? "text" : input.type;
+
+          return (
+            <FormInput
+              key={input.id}
+              {...input}
+              type={inputType}
+              value={formValues[input.name as keyof typeof formValues]}
+              handleChange={handleChange}
+              showValidation={true}
+              showPassword={showPassword}
+              isPasswordInput={isPasswordInput}
+              togglePasswordVisibility={togglePasswordVisibility}
+            />
+          );
+        })}
         <button className="submit-btn" type="submit">Confirm</button>
         <button className="cancel-btn" type="button" onClick={() => setShown(false)}>Cancel</button>
       </form>
