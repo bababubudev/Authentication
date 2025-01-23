@@ -86,4 +86,10 @@ export const adminQueries = {
     updated_at = CURRENT_TIMESTAMP
     WHERE id = $2 RETURNING *
   `,
+
+  updateUsername: `
+    UPDATE users SET username = $1,
+    updated_at = CURRENT_TIMESTAMP
+    WHERE id = $2 RETURNING *
+  `,
 }

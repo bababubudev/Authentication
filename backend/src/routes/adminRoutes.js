@@ -9,6 +9,7 @@ adminRoutes.use(authorize, requireAdmin);
 
 adminRoutes.get("/users", adminController.getUsers);
 adminRoutes.put("/users/:userId/status", adminController.updateUserStatus);
+adminRoutes.put("/users/:userId/updateName", adminController.updateUsername);
 adminRoutes.get("/users/:userId/audit", adminController.getUserAuditLog);
 
 export default adminRoutes;

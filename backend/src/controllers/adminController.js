@@ -20,7 +20,7 @@ export const adminController = {
   },
 
   async updateUserStatus(req, res) {
-    const userId = req.params.userId
+    const { userId } = req.params;
     const { isActive } = req.body;
 
     try {
@@ -49,6 +49,7 @@ export const adminController = {
 
   async getUserAuditLog(req, res) {
     const { userId } = req.params;
+
     try {
       const { rows } = await pool.query(
         adminQueries.getUserAuditLog,
@@ -57,6 +58,30 @@ export const adminController = {
 
       res.status(200).json({
         message: "User audit log retrieved",
+        data: rows
+      });
+    }
+    catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: "Internal server error",
+        error: err.message,
+      });
+    }
+  },
+
+  async updateUsername(req, res) {
+    const { userId } = req.params;
+    const { newName } = req.body;
+
+    try {
+      const { rows } = await pool.query(
+        adminQueries.updateUsername,
+        [newName, userId]
+      );
+
+      res.status(200).json({
+        message: "User name changed",
         data: rows
       });
     }

@@ -59,6 +59,24 @@ function AdminDashboard() {
     }
   };
 
+  const changeUserName = async (userId: string, newName: string) => {
+    try {
+      const response = await fetch(BASE_URL + `/users/${userId}/updateName`, {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newName: newName }),
+      });
+
+      if (response.ok) {
+        fetchUsers();
+      }
+    }
+    catch (err) {
+      console.error("Failed to update user name", err);
+    }
+  }
+
   useEffect(() => {
     if (user?.role === "admin") {
       fetchUsers();
@@ -81,6 +99,7 @@ function AdminDashboard() {
                 user={user}
                 toggleUserStatus={toggleUserStatus}
                 viewAuditLog={viewAuditLog}
+                renameUser={changeUserName}
               />
             ))}
           </div>

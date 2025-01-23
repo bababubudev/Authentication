@@ -11,7 +11,7 @@ interface FormInputParams extends InputParams {
 	showPassword?: boolean;
 
 	handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
-	togglePasswordVisibility: () => void;
+	togglePasswordVisibility?: () => void;
 }
 
 function FormInput(prop: FormInputParams) {
