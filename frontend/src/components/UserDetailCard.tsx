@@ -13,16 +13,16 @@ function UserDetailCard({ user, toggleUserStatus, viewAuditLog }: UserDetailCard
       </div>
       <div className="buttons-container">
         <button
-          onClick={() => toggleUserStatus(user.id, user.is_active)}
-          className="toggle-status-btn"
-        >
-          {user.is_active ? "Deactivate" : "Activate"}
-        </button>
-        <button
           onClick={() => viewAuditLog(user.id)}
           className="show-audit-btn"
         >
           Audit log
+        </button>
+        <button
+          onClick={() => toggleUserStatus(user.id, user.is_active)}
+          className="toggle-status-btn"
+        >
+          {user.is_active ? "Deactivate" : "Activate"}
         </button>
       </div>
     </div>

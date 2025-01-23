@@ -1,0 +1,40 @@
+.user-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 20rem));
+  gap: 1rem;
+}
+
+.detailed-info {
+  background: var(--col-secondary-container);
+  border-radius: 0.5rem;
+  padding: 1rem;
+
+
+  h4 {
+    color: var(--col-on-secondary-container);
+  }
+
+  p {
+    color: var(--col-on-secondary-container-faded);
+  }
+
+  .buttons-container {
+    button {
+      background: var(--col-secondary);
+      color: var(--col-on-secondary);
+      border: none;
+      border-radius: 0.5rem;
+
+      align-self: center;
+      justify-self: start;
+
+      padding: 1rem;
+      margin-left: 0.75rem;
+    }
+
+    .toggle-status-btn {
+      background-color: var(--col-error);
+      color: var(--col-on-error);
+    }
+  }
+}

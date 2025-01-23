@@ -1,8 +1,9 @@
 .form-wrapper {
   display: grid;
-  gap: 0.5ch;
 
   label {
+    opacity: 0.8;
+    margin-left: .25rem;
     color: var(--col-surface);
     font-size: 0.85em;
     font-weight: 600;
@@ -10,8 +11,8 @@
   }
 
   .input-wrapper {
-    position: relative;
     display: grid;
+    position: relative;
 
     input {
       font-size: 1rem;
@@ -21,15 +22,7 @@
 
       background-color: var(--col-surface);
       color: var(--col-on-surface);
-
-      &[data-was-focused="true"]:invalid {
-        border: 1px solid var(--col-error);
-        outline: none;
-
-        &~.info-box {
-          display: block;
-        }
-      }
+      border: 1px solid var(--col-outline-variant);
     }
 
     .password-toggle {
@@ -37,10 +30,11 @@
       top: 0;
       bottom: 0;
       right: 0;
-      padding: 1rem;
+      padding: 1.15rem 1rem;
 
       background: none;
       border: none;
+      cursor: pointer;
 
       svg {
         font-size: 1.25rem;
@@ -48,9 +42,25 @@
         filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 1));
       }
     }
+
+    &.invalid {
+      input {
+        border: 1px solid var(--col-error);
+        outline: none;
+      }
+
+      &~label {
+        color: var(--col-error) !important;
+      }
+
+      &~.info-box {
+        display: block;
+      }
+    }
   }
 
   .info-box {
+    margin-top: 0.1rem;
     position: relative;
     display: none;
 

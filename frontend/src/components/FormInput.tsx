@@ -1,10 +1,11 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { InputParams } from "../types/FormInterface";
 import { CiMinimize1 } from "react-icons/ci";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 interface FormInputParams extends InputParams {
 	value: string;
+	forceValidatedError?: boolean;
 	showValidation?: boolean;
 	isPasswordInput?: boolean;
 	showPassword?: boolean;
@@ -15,6 +16,7 @@ interface FormInputParams extends InputParams {
 
 function FormInput(prop: FormInputParams) {
 	const [focused, setFocused] = useState<boolean>(false);
+	const [isValid, setIsValid] = useState<boolean>(true);
 
 	const {
 		id,
@@ -23,6 +25,7 @@ function FormInput(prop: FormInputParams) {
 		errors,
 		handleChange,
 		showValidation = true,
+		forceValidatedError = false,
 		isPasswordInput = false,
 		showPassword = false,
 		togglePasswordVisibility,
@@ -30,6 +33,7 @@ function FormInput(prop: FormInputParams) {
 	} = prop;
 
 	const showToggleFor = ["password", "currentPassword"].includes(inputProps.name);
+	const invalid = (!isValid || forceValidatedError) && focused && showValidation;
 
 	const handleBlur = () => {
 		if (value.trim() !== "" && showValidation) {
@@ -37,19 +41,34 @@ function FormInput(prop: FormInputParams) {
 		}
 	};
 
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		handleChange(e);
+		setIsValid(e.target.checkValidity());
+	};
+
+	useEffect(() => {
+		if (forceValidatedError) {
+			setFocused(true);
+			setIsValid(false);
+		}
+	}, [forceValidatedError])
+
 	return (
 		<div className="form-wrapper">
 			<label>{label}</label>
-			<div className="input-wrapper">
+			<div
+				className={`input-wrapper${invalid ? " invalid" : ""}`}
+			>
 				<input
 					{...inputProps}
 					value={value}
-					onChange={handleChange}
+					onChange={handleInputChange}
 					onBlur={handleBlur}
 					onFocus={() => {
-						inputProps.name === "confirmPassword" && showValidation && setFocused(true)
+						if (inputProps?.name === "confirmPassword" && showValidation) {
+							setFocused(true);
+						}
 					}}
-					data-was-focused={(focused && showValidation).toString()}
 				/>
 				{(isPasswordInput && showToggleFor) && (
 					<button
@@ -57,25 +76,28 @@ function FormInput(prop: FormInputParams) {
 						className="password-toggle"
 						onClick={togglePasswordVisibility}
 						aria-label={showPassword ? "Hide password" : "Show password"}
+						tabIndex={999}
 					>
 						{showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
 					</button>
 				)}
-				{showValidation && (
-					<ul className="info-box">
-						{errors.map((err, i) => (
-							<li key={i}>{err}</li>
-						))}
-						<button
-							type="button"
-							className="close-info"
-							onClick={() => setFocused(false)}
-						>
-							<CiMinimize1 />
-						</button>
-					</ul>
-				)}
 			</div>
+
+			{showValidation && (
+				<ul className="info-box">
+					{errors.map((err, i) => (
+						<li key={i}>{err}</li>
+					))}
+					<button
+						type="button"
+						className="close-info"
+						onClick={() => setFocused(false)}
+						tabIndex={999}
+					>
+						<CiMinimize1 />
+					</button>
+				</ul>
+			)}
 		</div>
 	);
 }

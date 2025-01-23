@@ -1,41 +1,54 @@
-@use "../components/ChangePassword.scss";
+@use "../components/UserDetailCard.scss";
 
 .dashboard {
-  margin: 0 5rem;
+  margin: 5rem;
+
+  .heading {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 1rem;
+    padding: 1rem 2rem;
+
+    border-radius: 0.5rem;
+    background-color: var(--col-primary);
+    color: var(--col-on-primary);
+
+    .logout-btn {
+      background: var(--col-primary-container);
+      color: var(--col-on-primary-container);
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0 1rem;
+    }
+
+    &.admin {
+      background-color: var(--col-surface);
+      color: var(--col-on-surface);
+
+      .logout-btn {
+        background: var(--col-error);
+        color: var(--col-on-error);
+      }
+    }
+  }
 
   .user-dashboard,
   .admin-dashboard {
     display: grid;
     gap: 1rem;
 
-    .heading {
-      display: flex;
-      justify-content: space-between;
-
-      margin-top: 5rem;
-      padding: 1rem 2rem;
-      border-radius: 0.5rem;
-      background-color: var(--col-primary);
-      color: var(--col-on-primary);
-
-      button {
-        background: var(--col-primary-container);
-        color: var(--col-on-primary-container);
-        border: none;
-        border-radius: 0.5rem;
-        padding: 0 1rem;
-      }
-    }
-
     .details {
       color: var(--col-on-secondary);
       background: var(--col-secondary-faded);
-      backdrop-filter: blur(10rem);
-
+      backdrop-filter: blur(1.5rem);
+      -webkit-backdrop-filter: blur(1.5rem);
+      will-change: backdrop-filter;
       padding: 2rem;
 
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      gap: 1rem;
 
       border-radius: 0.5rem;
       border: 1px solid var(--col-primary);
@@ -46,34 +59,23 @@
         padding: 1rem;
       }
 
-      button {
+      .change-password-btn {
+        justify-self: start;
         background: var(--col-secondary-container);
         color: var(--col-on-secondary-container);
+
         border: none;
         border-radius: 0.5rem;
 
-        align-self: center;
-        justify-self: start;
-
+        margin-left: 0.5rem;
         padding: 1rem;
-        margin-left: 0.75rem;
       }
     }
   }
 
   .admin-dashboard .details {
     background: var(--col-on-surface-faded);
-    border-color: var(--col-outline);
-
+    border-color: var(--col-secondary);
     grid-template-columns: none;
-
-    .user-management .user-details {
-      display: grid;
-      gap: 1rem;
-
-      .detailed-info {
-        justify-self: center;
-      }
-    }
   }
 }

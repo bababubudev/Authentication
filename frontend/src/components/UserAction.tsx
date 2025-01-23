@@ -11,6 +11,7 @@ function UserAction() {
 	const { isAuthenticated, user, login, register } = useAuth();
 
 	const [showPassword, setShowPassword] = useState<boolean>(false);
+	const [serverError, setServerError] = useState<string | null>(null);
 	const [isSignUp, setIsSignup] = useState<boolean>(false);
 
 	const emptyLoginField: LoginInterface = useMemo(() => ({
@@ -38,11 +39,13 @@ function UserAction() {
 			autoComplete: "off",
 			autoFocus: true,
 			required: true,
-			errors: [
-				"Must be 3-16 characters",
-				"[ - ] or [ _ ] allowed",
-				"No Special characters"
-			],
+			errors: serverError
+				? [serverError]
+				: [
+					"Must be 3-16 characters",
+					"[ - ] or [ _ ] allowed",
+					"No Special characters"
+				],
 		},
 		{
 			id: 2,
@@ -51,9 +54,11 @@ function UserAction() {
 			type: isSignUp ? "email" : "text",
 			placeholder: "john.doe@example.com",
 			required: true,
-			errors: [
-				"Invalid email address"
-			],
+			errors: serverError
+				? [serverError]
+				: [
+					"Invalid email address"
+				],
 		},
 		{
 			id: 3,
@@ -85,6 +90,7 @@ function UserAction() {
 
 	useEffect(() => {
 		setFormValues(isSignUp ? emptySignUpField : emptyLoginField);
+		setServerError(null);
 	}, [emptyLoginField, emptySignUpField, isSignUp]);
 
 	const filteredInputs = inputObjects.filter(input => isSignUp || ["email", "password"].includes(input.name));
@@ -105,13 +111,18 @@ function UserAction() {
 			} else {
 				await login(data.email as string, data.password as string);
 			}
+
+			setServerError(null);
 		}
 		catch (err) {
-			console.error(err);
+			const errorMessage = err instanceof Error ? err.message : "Password change failed";
+			console.error(errorMessage);
+			setServerError(errorMessage);
 		}
 	}
 
 	function handleChange(e: ChangeEvent<HTMLInputElement>): void {
+		setServerError(null);
 		setFormValues({ ...formValues, [e.target.name]: e.target.value });
 	}
 
@@ -127,6 +138,7 @@ function UserAction() {
 						<h1 className="form-title">{isSignUp ? "Create new account" : "Sign in"}</h1>
 						{filteredInputs.map((input) => {
 							const isPasswordInput = ["password", "confirmPassword"].includes(input.name);
+							const showForceErrors = ["username", "email"].includes(input.name);
 							const inputType = isPasswordInput && showPassword ? "text" : input.type;
 
 							return (
@@ -136,6 +148,7 @@ function UserAction() {
 									type={inputType}
 									value={formValues[input.name as keyof typeof formValues]}
 									handleChange={handleChange}
+									forceValidatedError={showForceErrors ? !!serverError : false}
 									showValidation={isSignUp}
 									showPassword={showPassword}
 									isPasswordInput={isPasswordInput}

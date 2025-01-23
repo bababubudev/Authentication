@@ -2,6 +2,8 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import FormInput from "./FormInput";
 import { InputParams } from "../types/FormInterface";
+import Modal from "./Modal";
+import { ModalType } from "../types/Modal";
 
 interface PasswordFormValues {
   currentPassword: string;
@@ -10,16 +12,17 @@ interface PasswordFormValues {
 }
 
 interface ChangePasswordProp {
-  isShown: boolean;
-  setShown: (value: boolean) => void;
+  isModalShown: boolean;
+  setIsModalShown: (value: boolean) => void;
 }
 
 const PASSWORD_REGEX = "^(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$";
 
-function ChangePassword({ isShown, setShown }: ChangePasswordProp) {
+function ChangePassword({ isModalShown, setIsModalShown }: ChangePasswordProp) {
   const { changePassword } = useAuth();
 
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const [formValues, setFormValues] = useState<PasswordFormValues>({
     currentPassword: "",
@@ -35,7 +38,10 @@ function ChangePassword({ isShown, setShown }: ChangePasswordProp) {
       type: "password",
       placeholder: "Enter your current password",
       required: true,
-      errors: ["Please enter your current password"]
+      pattern: serverError ? "^(?!.*).+$" : undefined,
+      errors: [
+        serverError || "Please enter your current password"
+      ]
     },
     {
       id: 2,
@@ -63,8 +69,11 @@ function ChangePassword({ isShown, setShown }: ChangePasswordProp) {
     },
   ];
 
+  const isSubmissionDisabled = Object.values(formValues).some(value => value.trim() === "");
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
+
     try {
       await changePassword(
         formValues.currentPassword,
@@ -77,46 +86,58 @@ function ChangePassword({ isShown, setShown }: ChangePasswordProp) {
         newPassword: "",
         confirmPassword: ""
       });
+
+      setServerError(null);
+      setIsModalShown(false);
     }
     catch (err) {
-      console.error(err);
+      const errorMessage = err instanceof Error ? err.message : "Password change failed";
+      setServerError(errorMessage);
     }
   }
 
   function handleChange(e: ChangeEvent<HTMLInputElement>): void {
-    setFormValues({ ...formValues, [e.target.name]: e.target.value });
+    setServerError(null);
+    setFormValues({ ...formValues, [e.target.name]: e.target.value.trim() });
   }
 
   function togglePasswordVisibility() {
-    setShowPassword(prev => !prev);
+    setPasswordVisible(prev => !prev);
   }
 
   return (
-    <div className={`user-action change-password ${isShown ? "shown" : "hidden"}`}>
-      <form onSubmit={handleSubmit}>
-        <h1 className="form-title">Change Password</h1>
-        {inputObjects.map((input) => {
-          const isPasswordInput = ["newPassword", "confirmPassword", "currentPassword"].includes(input.name);
-          const inputType = isPasswordInput && showPassword ? "text" : input.type;
+    <Modal
+      isDisabled={isSubmissionDisabled}
+      isOpen={isModalShown}
+      dialogue="Change password"
+      type={ModalType.form}
+      description={
+        <>
+          {inputObjects.map((input) => {
+            const isPasswordInput = ["newPassword", "confirmPassword", "currentPassword"].includes(input.name);
+            const showForceErrors = input.name === "currentPassword";
+            const inputType = isPasswordInput && passwordVisible ? "text" : input.type;
 
-          return (
-            <FormInput
-              key={input.id}
-              {...input}
-              type={inputType}
-              value={formValues[input.name as keyof typeof formValues]}
-              handleChange={handleChange}
-              showValidation={true}
-              showPassword={showPassword}
-              isPasswordInput={isPasswordInput}
-              togglePasswordVisibility={togglePasswordVisibility}
-            />
-          );
-        })}
-        <button className="submit-btn" type="submit">Confirm</button>
-        <button className="cancel-btn" type="button" onClick={() => setShown(false)}>Cancel</button>
-      </form>
-    </div>
+            return (
+              <FormInput
+                key={input.id}
+                {...input}
+                type={inputType}
+                value={formValues[input.name as keyof typeof formValues]}
+                handleChange={handleChange}
+                forceValidatedError={showForceErrors ? !!serverError : false}
+                showValidation={true}
+                showPassword={passwordVisible}
+                isPasswordInput={isPasswordInput}
+                togglePasswordVisibility={togglePasswordVisibility}
+              />
+            );
+          })}
+        </>
+      }
+      onSubmitForm={handleSubmit}
+      onCancel={() => setIsModalShown(false)}
+    />
   );
 }
 

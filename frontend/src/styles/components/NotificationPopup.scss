@@ -5,6 +5,7 @@
 
   background: var(--col-on-surface-faded);
   backdrop-filter: blur(1rem);
+  -webkit-backdrop-filter: blur(1rem);
   box-shadow: 0 4px 5rem var(--col-on-surface-faded);
 
   display: flex;

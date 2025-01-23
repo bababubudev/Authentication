@@ -2,6 +2,7 @@
 @use "./pages/DashboardPage.scss";
 @use "./components/Header.scss";
 @use "./components/NotificationPopup.scss";
+@use "./components/Modal.scss";
 
 @function generate-color-vars($name, $col1, $col2, $col3, $col4) {
   @return ("--col-#{$name}": $col1,
@@ -44,7 +45,8 @@
 }
 
 body {
-  height: 100vh;
+  overflow: hidden;
+  min-height: 100vh;
   color: var(--col-primary);
 
   background:

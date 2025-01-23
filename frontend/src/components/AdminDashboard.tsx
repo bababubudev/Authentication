@@ -8,7 +8,7 @@ function AdminDashboard() {
   const [users, setUsers] = useState<DefaultUser[]>([]);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [auditLog, setAuditLog] = useState<AuditLog[]>([]);
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   const fetchUsers = async () => {
     try {
@@ -71,10 +71,6 @@ function AdminDashboard() {
 
   return (
     <div className="admin-dashboard">
-      <div className="heading">
-        <h1>Admin {user.username}'s Dashboard</h1>
-        <button onClick={() => logout()}>logout</button>
-      </div>
       <div className="details">
         <div className="user-management">
           <h2>User Management</h2>
