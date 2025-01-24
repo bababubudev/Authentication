@@ -5,10 +5,10 @@ import { useAuth } from "../context/AuthContext";
 import { MdNotificationsActive } from "react-icons/md";
 
 interface NotificationPopupProp {
-
+  extraNotif: MessageType
 }
 
-function NotificationPopup() {
+function NotificationPopup({ extraNotif }: NotificationPopupProp) {
   const { error } = useAuth();
   const { state } = useLocation();
 
@@ -43,8 +43,13 @@ function NotificationPopup() {
       return;
     }
 
-    setNotification(state);
-  }, [state, error]);
+    if (state) {
+      setNotification(state);
+      return;
+    }
+
+    setNotification(extraNotif);
+  }, [state, error, extraNotif]);
 
   return (
     <>

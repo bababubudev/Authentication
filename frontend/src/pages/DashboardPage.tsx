@@ -6,8 +6,10 @@ import AdminDashboard from "../components/AdminDashboard";
 import NotificationPopup from "../components/NotificationPopup";
 import Modal from "../components/Modal";
 import { ModalType } from "../types/Modal";
+import { MessageType } from "../types/Notification";
 
 function DashboardPage() {
+  const [extraNotif, setExtraNotif] = useState<MessageType>(null);
   const [passwordChangeShown, setPasswordChangeShown] = useState<boolean>(false);
   const [logoutWarning, setLogoutWarning] = useState<boolean>(false);
 
@@ -37,7 +39,7 @@ function DashboardPage() {
       </div>
       {user?.role === "admin"
         ? <AdminDashboard
-
+          notify={setExtraNotif}
         />
         : <UserDashboard
           user={user}
@@ -48,7 +50,9 @@ function DashboardPage() {
         isModalShown={passwordChangeShown}
         setIsModalShown={setPasswordChangeShown}
       />
-      <NotificationPopup />
+      <NotificationPopup
+        extraNotif={extraNotif}
+      />
     </div>
   );
 }

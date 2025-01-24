@@ -13,7 +13,6 @@ async function loginUser(req, res) {
     const email = isEmail ? emailOrUsername : null;
     const username = isEmail ? null : emailOrUsername;
 
-    console.log(email, username, password);
     const { rows } = await pool.query(queries.getUserByEmailOrUsername, [email, username]);
     const user = rows[0];
 

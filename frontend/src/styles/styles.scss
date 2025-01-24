@@ -22,6 +22,10 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   @include apply-color-vars(generate-color-vars("primary", #6750A4, #EADDFF, #FFFFFF, #4F378B));
   @include apply-color-vars(generate-color-vars("secondary", #625B71, #E8DEF8, #FFFFFF, #4A4458));
@@ -45,7 +49,6 @@
 }
 
 body {
-  overflow: hidden;
   min-height: 100vh;
   color: var(--col-primary);
 

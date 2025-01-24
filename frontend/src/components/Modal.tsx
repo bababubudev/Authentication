@@ -159,6 +159,7 @@ function Modal({
     <div
       className={`modal-overlay ${isOpen ? "visible" : "hidden"}`}
       style={{ zIndex }}
+      onClick={(e) => e.stopPropagation()}
     >
       {renderContent()}
     </div >

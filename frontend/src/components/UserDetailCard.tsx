@@ -4,18 +4,22 @@ import { ModalType } from "../types/Modal";
 import { InputParams } from "../types/FormInterface";
 import FormInput from "./FormInput";
 
+import { CgDetailsMore } from "react-icons/cg";
+
 interface UserDetailCard {
   user: User;
+  isSelected: boolean;
   onUserCardClick: (userId: string) => void;
   toggleUserStatus: (userId: string, isActive: boolean) => Promise<void>;
   viewAuditLog: (userId: string) => Promise<void>;
   renameUser: (userId: string, newName: string) => Promise<void>;
 }
 
-function UserDetailCard({ user, onUserCardClick, toggleUserStatus, viewAuditLog, renameUser }: UserDetailCard) {
+function UserDetailCard({ user, isSelected, onUserCardClick, toggleUserStatus, viewAuditLog, renameUser }: UserDetailCard) {
   const [showRenameModal, setShowRenameModal] = useState<boolean>(false);
   const [showActivationModal, setShowActivationModal] = useState<boolean>(false);
   const [nameValue, setNameValue] = useState<string>("");
+
 
   const inputObject: InputParams = {
     id: 1,
@@ -33,7 +37,6 @@ function UserDetailCard({ user, onUserCardClick, toggleUserStatus, viewAuditLog,
     <div
       key={user.user_id}
       className={`detailed-info ${user.role}`}
-      onClick={() => { onUserCardClick(user.user_id); }}
     >
       <div>
         <h4>{user.username}</h4>
@@ -41,18 +44,17 @@ function UserDetailCard({ user, onUserCardClick, toggleUserStatus, viewAuditLog,
       </div>
       <div className="buttons-container">
         <button
-          onClick={(e) => { e.stopPropagation(); viewAuditLog(user.user_id) }}
+          onClick={() => viewAuditLog(user.user_id)}
           className="show-audit-btn"
         >
           Audit log
         </button>
         <button
-          onClick={(e) => { e.stopPropagation(); setShowActivationModal(true) }}
+          onClick={() => setShowActivationModal(true)}
           className={`toggle-status-btn ${user.is_active ? "active" : "inactive"}`}
         >
           {user.is_active ? "DEACTIVATE" : "ACTIVATE"}
           <Modal
-            isChild={true}
             type={ModalType.alert}
             isOpen={showActivationModal}
             dialogue={user.is_active ? "Deactivate " + user.username + "?" : "Activate " + user.username + "?"}
@@ -62,9 +64,15 @@ function UserDetailCard({ user, onUserCardClick, toggleUserStatus, viewAuditLog,
           />
         </button>
         <button
-          onClick={(e) => { e.stopPropagation(); setShowRenameModal(true) }}
+          onClick={() => setShowRenameModal(true)}
         >
           Rename
+        </button>
+        <button
+          onClick={() => onUserCardClick(user.user_id)}
+          className={`show-details-btn ${isSelected ? "selected" : ""}`}
+        >
+          <CgDetailsMore />
         </button>
       </div>
       <Modal

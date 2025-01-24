@@ -1,22 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import UserDetailCard from "./UserDetailCard";
-import Modal from "./Modal";
-import { ModalType } from "../types/Modal";
 import UserDashboard from "./UserDashboard";
+import { MessageType, Status } from "../types/Notification";
 
 interface AdminDashboardProps {
-  notify: () => void;
+  notify: (message: MessageType) => void;
 }
 
-function AdminDashboard() {
+function AdminDashboard({ notify }: AdminDashboardProps) {
   const BASE_URL = "http://localhost:6060/api/admin";
 
   const [users, setUsers] = useState<User[]>([]);
   const [auditLog, setAuditLog] = useState<AuditLog[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [showUserDetail, setShowUserDetail] = useState<boolean>(false);
   const { user } = useAuth();
+  const detailRef = useRef<HTMLDivElement>(null);
 
   const fetchUsers = async () => {
     try {
@@ -30,6 +29,7 @@ function AdminDashboard() {
     }
     catch (err) {
       console.error("Failed to fetch users", err);
+      notify({ message: "Failed to fetch users", state: Status.Success });
     }
   };
 
@@ -44,10 +44,12 @@ function AdminDashboard() {
 
       if (response.ok) {
         fetchUsers();
+        notify({ message: "User status changed", state: Status.Success });
       }
     }
     catch (err) {
       console.error("Failed to update user status", err);
+      notify({ message: "Failed to update user status", state: Status.Success });
     }
   };
 
@@ -63,6 +65,7 @@ function AdminDashboard() {
     }
     catch (err) {
       console.error("Failed to fetch audit log", err);
+      notify({ message: "Failed to fetch audit log", state: Status.Error });
     }
   };
 
@@ -76,20 +79,32 @@ function AdminDashboard() {
       });
 
       if (response.ok) {
+        notify({ message: "Username changed", state: Status.Success });
         fetchUsers();
       }
     }
     catch (err) {
-      console.error("Failed to update user name", err);
+      console.error("Failed to update username", err);
+      notify({ message: "Failed to update username", state: Status.Error });
     }
   };
 
   const onUserClicked = (userId: string) => {
+    if (selectedUser?.user_id === userId) {
+      setSelectedUser(null);
+      return;
+    }
+
     const currentUser = users.find(val => val.user_id === userId);
 
     if (!currentUser) return;
     setSelectedUser(currentUser);
-    setShowUserDetail(true);
+
+    setTimeout(() => {
+      if (detailRef.current) {
+        detailRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 0);
   }
 
   useEffect(() => {
@@ -111,6 +126,7 @@ function AdminDashboard() {
             {users.map(user => (
               <UserDetailCard
                 key={user.user_id}
+                isSelected={selectedUser?.user_id === user.user_id}
                 user={user}
                 onUserCardClick={onUserClicked}
                 toggleUserStatus={toggleUserStatus}
@@ -135,17 +151,22 @@ function AdminDashboard() {
             }
           </div>
         </div>
-        <Modal
-          dialogue={selectedUser?.username + " details"}
-          description={
+        {selectedUser &&
+          <div className="user-detail-area" ref={detailRef}>
+            <div className="upper-part">
+              <h2>User details</h2>
+              <button
+                className="remove-user-detail"
+                onClick={() => setSelectedUser(null)}
+              >
+                Hide details
+              </button>
+            </div>
             <UserDashboard
               user={selectedUser}
             />
-          }
-          isOpen={showUserDetail}
-          type={ModalType.info}
-          onCancel={() => setShowUserDetail(false)}
-        />
+          </div>
+        }
       </div>
     </div>
   );
