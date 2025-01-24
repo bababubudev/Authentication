@@ -3,6 +3,10 @@
 ## Overview
 Full-stack authentication system with user and admin functionalities using Node.js, Express, PostgreSQL, and React.
 
+![image](https://github.com/user-attachments/assets/e1dabc40-5c21-4761-a671-e9245f7be3ed)
+
+
+
 ## Features
 - User registration and login
 - Role-based access control
