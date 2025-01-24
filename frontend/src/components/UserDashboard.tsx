@@ -1,6 +1,6 @@
 interface UserDashboardProp {
   user: User | null;
-  visiblePassword: (value: boolean) => void;
+  visiblePassword?: (value: boolean) => void;
 }
 
 function UserDashboard({ user, visiblePassword }: UserDashboardProp) {
@@ -36,12 +36,14 @@ function UserDashboard({ user, visiblePassword }: UserDashboardProp) {
           <h4>Last login</h4>
           <p>{lastLogin === null ? "N/A" : lastLogin.toDateString()}</p>
         </div>
-        <button
-          className="change-password-btn"
-          onClick={() => visiblePassword(true)}
-        >
-          <h4>Change password</h4>
-        </button>
+        {visiblePassword && (
+          <button
+            className="change-password-btn"
+            onClick={() => visiblePassword(true)}
+          >
+            <h4>Change password</h4>
+          </button>
+        )}
       </div>
     </div>
   );

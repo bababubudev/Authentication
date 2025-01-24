@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import UserDetailCard from "./UserDetailCard";
+import Modal from "./Modal";
+import { ModalType } from "../types/Modal";
+import UserDashboard from "./UserDashboard";
+
+interface AdminDashboardProps {
+  notify: () => void;
+}
 
 function AdminDashboard() {
   const BASE_URL = "http://localhost:6060/api/admin";
 
-  const [users, setUsers] = useState<DefaultUser[]>([]);
-  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
   const [auditLog, setAuditLog] = useState<AuditLog[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [showUserDetail, setShowUserDetail] = useState<boolean>(false);
   const { user } = useAuth();
 
   const fetchUsers = async () => {
@@ -52,7 +60,6 @@ function AdminDashboard() {
 
       const data = await response.json();
       setAuditLog(data.data);
-      setSelectedUser(userId);
     }
     catch (err) {
       console.error("Failed to fetch audit log", err);
@@ -75,6 +82,14 @@ function AdminDashboard() {
     catch (err) {
       console.error("Failed to update user name", err);
     }
+  };
+
+  const onUserClicked = (userId: string) => {
+    const currentUser = users.find(val => val.user_id === userId);
+
+    if (!currentUser) return;
+    setSelectedUser(currentUser);
+    setShowUserDetail(true);
   }
 
   useEffect(() => {
@@ -95,8 +110,9 @@ function AdminDashboard() {
           <div className="user-details">
             {users.map(user => (
               <UserDetailCard
-                key={user.id}
+                key={user.user_id}
                 user={user}
+                onUserCardClick={onUserClicked}
                 toggleUserStatus={toggleUserStatus}
                 viewAuditLog={viewAuditLog}
                 renameUser={changeUserName}
@@ -107,7 +123,7 @@ function AdminDashboard() {
         <div className="user-audit-log">
           <h2>User Audit Log</h2>
           <div className="logs">
-            {selectedUser && (auditLog.length > 0 ?
+            {auditLog.length > 0 ?
               auditLog.map(log => (
                 <div key={log.id}>
                   <p>IP: {log.ip_address}</p>
@@ -116,9 +132,20 @@ function AdminDashboard() {
                 </div>
               )) :
               <p>Nothing in the audit</p>
-            )}
+            }
           </div>
         </div>
+        <Modal
+          dialogue={selectedUser?.username + " details"}
+          description={
+            <UserDashboard
+              user={selectedUser}
+            />
+          }
+          isOpen={showUserDetail}
+          type={ModalType.info}
+          onCancel={() => setShowUserDetail(false)}
+        />
       </div>
     </div>
   );

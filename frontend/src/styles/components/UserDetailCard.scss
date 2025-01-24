@@ -1,14 +1,20 @@
 .user-details {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 20rem));
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: 1rem;
 }
 
 .detailed-info {
+  position: relative;
+
   background: var(--col-secondary-container);
   border-radius: 0.5rem;
   padding: 1rem;
 
+  display: grid;
+  gap: 1rem;
+
+  min-height: 12rem;
 
   h4 {
     color: var(--col-on-secondary-container);
@@ -18,8 +24,27 @@
     color: var(--col-on-secondary-container-faded);
   }
 
+  &.admin {
+    background: var(--col-tertiary-container);
+    color: var(--col-on-tertiary-container);
+
+    h4 {
+      color: var(--col-on-tertiary-container);
+    }
+
+    p {
+      color: var(--col-on-tertiary-container-faded);
+    }
+
+  }
+
   .buttons-container {
-    button {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 0.5rem;
+
+    >button {
       background: var(--col-secondary);
       color: var(--col-on-secondary);
       border: none;
@@ -29,12 +54,30 @@
       justify-self: start;
 
       padding: 1rem;
-      margin-left: 0.75rem;
     }
 
     .toggle-status-btn {
-      background-color: var(--col-error);
-      color: var(--col-on-error);
+      position: absolute;
+      top: 0;
+      bottom: 0;
+
+      display: flex;
+      gap: 0.5rem;
+
+      padding: 0.25rem 0.75rem;
+      margin-bottom: 1rem;
+
+      border-radius: 1rem;
+
+      &.inactive {
+        background-color: var(--col-primary);
+        color: var(--col-on-primary);
+      }
+
+      &.active {
+        background-color: var(--col-error);
+        color: var(--col-on-error);
+      }
     }
   }
 }

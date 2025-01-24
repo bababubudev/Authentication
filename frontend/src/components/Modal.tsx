@@ -32,7 +32,6 @@ function Modal({
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        console.log("Cancel called");
         onCancel();
       }
     };
@@ -59,7 +58,7 @@ function Modal({
       <form
         ref={formRef}
         className={`form modal-content ${isOpen ? "visible" : "hidden"}`}
-        onSubmit={e => onSubmitForm ? onSubmitForm(e) : null}
+        onSubmit={e => { e.preventDefault(); onSubmitForm ? onSubmitForm(e) : null }}
       >
         {child}
       </form>
@@ -128,7 +127,7 @@ function Modal({
           Confirm
         </button>
         <button
-          onClick={onCancel}
+          onClick={e => { e.stopPropagation(); onCancel(); }}
           className="cancel-btn"
           type="button"
         >

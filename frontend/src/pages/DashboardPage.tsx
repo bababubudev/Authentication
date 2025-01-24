@@ -36,7 +36,9 @@ function DashboardPage() {
         />
       </div>
       {user?.role === "admin"
-        ? <AdminDashboard />
+        ? <AdminDashboard
+
+        />
         : <UserDashboard
           user={user}
           visiblePassword={setPasswordChangeShown}

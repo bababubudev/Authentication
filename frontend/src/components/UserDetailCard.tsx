@@ -5,14 +5,16 @@ import { InputParams } from "../types/FormInterface";
 import FormInput from "./FormInput";
 
 interface UserDetailCard {
-  user: DefaultUser;
+  user: User;
+  onUserCardClick: (userId: string) => void;
   toggleUserStatus: (userId: string, isActive: boolean) => Promise<void>;
   viewAuditLog: (userId: string) => Promise<void>;
   renameUser: (userId: string, newName: string) => Promise<void>;
 }
 
-function UserDetailCard({ user, toggleUserStatus, viewAuditLog, renameUser }: UserDetailCard) {
+function UserDetailCard({ user, onUserCardClick, toggleUserStatus, viewAuditLog, renameUser }: UserDetailCard) {
   const [showRenameModal, setShowRenameModal] = useState<boolean>(false);
+  const [showActivationModal, setShowActivationModal] = useState<boolean>(false);
   const [nameValue, setNameValue] = useState<string>("");
 
   const inputObject: InputParams = {
@@ -28,26 +30,39 @@ function UserDetailCard({ user, toggleUserStatus, viewAuditLog, renameUser }: Us
   }
 
   return (
-    <div key={user.id} className="detailed-info">
+    <div
+      key={user.user_id}
+      className={`detailed-info ${user.role}`}
+      onClick={() => { onUserCardClick(user.user_id); }}
+    >
       <div>
         <h4>{user.username}</h4>
         <p>{user.email}</p>
       </div>
       <div className="buttons-container">
         <button
-          onClick={() => viewAuditLog(user.id)}
+          onClick={(e) => { e.stopPropagation(); viewAuditLog(user.user_id) }}
           className="show-audit-btn"
         >
           Audit log
         </button>
         <button
-          onClick={() => toggleUserStatus(user.id, user.is_active)}
-          className="toggle-status-btn"
+          onClick={(e) => { e.stopPropagation(); setShowActivationModal(true) }}
+          className={`toggle-status-btn ${user.is_active ? "active" : "inactive"}`}
         >
-          {user.is_active ? "Deactivate" : "Activate"}
+          {user.is_active ? "DEACTIVATE" : "ACTIVATE"}
+          <Modal
+            isChild={true}
+            type={ModalType.alert}
+            isOpen={showActivationModal}
+            dialogue={user.is_active ? "Deactivate " + user.username + "?" : "Activate " + user.username + "?"}
+            description={`Are you sure you want to ${user.is_active ? "deactivate" : "activate"} ${user.username}`}
+            onConfirm={() => { toggleUserStatus(user.user_id, user.is_active); setShowActivationModal(false); }}
+            onCancel={() => setShowActivationModal(false)}
+          />
         </button>
         <button
-          onClick={() => setShowRenameModal(true)}
+          onClick={(e) => { e.stopPropagation(); setShowRenameModal(true) }}
         >
           Rename
         </button>
@@ -63,7 +78,7 @@ function UserDetailCard({ user, toggleUserStatus, viewAuditLog, renameUser }: Us
             handleChange={(e) => setNameValue(e.target.value)}
           />
         }
-        onSubmitForm={() => renameUser(user.id, nameValue)}
+        onSubmitForm={() => renameUser(user.user_id, nameValue)}
         onConfirm={() => setShowRenameModal(false)}
         onCancel={() => setShowRenameModal(false)}
       />

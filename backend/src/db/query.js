@@ -1,7 +1,7 @@
 export const queries = {
   createUser: `
-    INSERT INTO users (username, email, password)
-    VALUES ($1, $2, $3)
+    INSERT INTO users (username, email, password, role)
+    VALUES ($1, $2, $3, 'user')
     RETURNING id, username, email
   `,
 
@@ -72,7 +72,17 @@ export const queries = {
 
 export const adminQueries = {
   getAllUsers: `
-    SELECT * FROM users;
+    SELECT
+    u.id as user_id,
+    u.username,
+    u.email,
+    u.role,
+    u.is_email_verified,
+    u.is_active,
+    u.created_at,
+    u.updated_at,
+    u.last_login
+    FROM users u
   `,
 
   getUserAuditLog: `
@@ -92,4 +102,8 @@ export const adminQueries = {
     updated_at = CURRENT_TIMESTAMP
     WHERE id = $2 RETURNING *
   `,
+
+  getUserRole: `
+    SELECT role FROM users where id = $1
+  `
 }

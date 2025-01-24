@@ -4,6 +4,10 @@ import { MessageType } from "../types/Notification";
 import { useAuth } from "../context/AuthContext";
 import { MdNotificationsActive } from "react-icons/md";
 
+interface NotificationPopupProp {
+
+}
+
 function NotificationPopup() {
   const { error } = useAuth();
   const { state } = useLocation();

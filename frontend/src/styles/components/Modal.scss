@@ -67,11 +67,16 @@
   h1 {
     margin-top: 0;
     margin-bottom: 0.5rem;
+    text-align: start;
+  }
+
+  .description {
+    text-align: start !important;
   }
 
   .modal-buttons {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-end !important;
     gap: 1rem;
     margin-top: 1.5rem;
 
