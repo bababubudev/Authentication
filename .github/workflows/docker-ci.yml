@@ -26,6 +26,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
+          file: ./Dockerfile
           push: true
           tags: ghcr.io/bababubudev/nodeauth-frontend:latest
 
@@ -33,5 +34,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./backend
+          file: ./Dockerfile
           push: true
           tags: ghcr.io/bababubudev/nodeauth-backend:latest
