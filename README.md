@@ -25,7 +25,7 @@ Full-stack authentication system with user and admin functionalities using Node.
 
 ## Installation & Setup
 1. Clone repository
-2. Run: `docker-compose up --build`
+2. Run: `docker compose up --build`
 
 ## Docker Configuration
 - PostgreSQL database service
