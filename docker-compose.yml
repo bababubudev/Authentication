@@ -8,13 +8,17 @@ services:
       - POSTGRES_DB=nodelogin
     ports:
       - "5432:5432"
+    volumes:
+      - ./backend/src/db/migrations/01_initial_schema.sql:/docker-entrypoint-initdb.d/01_initial_schema.sql
 
   backend:
     build: ./backend
+    restart: always
     ports:
       - "6060:6060"
     volumes:
       - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - postgres
     environment:
@@ -28,7 +32,9 @@ services:
 
   frontend:
     build: ./frontend
+    restart: always
     ports:
       - "5173:5173"
     volumes:
       - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
