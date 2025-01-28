@@ -19,6 +19,10 @@ jobs:
             context: ./backend
             dockerfile: ./backend/DockerFile
 
+          - name: nodeauth-postgres
+            context: .
+            dockerfile: Dockerfile.postgres
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -39,4 +43,10 @@ jobs:
           context: ${{ matrix.service.context }}
           file: ${{ matrix.service.dockerfile }}
           push: true
-          tags: ghcr.io/${{ github.actor }}/${{ matrix.service.name }}:latest
+          tags: |
+            ghcr.io/${{ github.actor }}/${{ matrix.service.name }}:latest
+            ghcr.io/${{ github.actor }}/${{ matrix.service.name }}:${{ github.sha }}
+          build-args: |
+            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
