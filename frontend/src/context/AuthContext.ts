@@ -9,7 +9,8 @@ interface AuthContextType {
   changePassword: (currentPassword: string, newPassword: string, confirmPassword: string) => Promise<void>;
   logout: () => Promise<void>;
   verifyAuth: () => Promise<void>;
-  error: MessageType | null;
+  error: MessageType;
+  setError: (message: MessageType) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

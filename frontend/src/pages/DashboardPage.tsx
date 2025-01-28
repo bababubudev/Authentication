@@ -52,6 +52,7 @@ function DashboardPage() {
       />
       <NotificationPopup
         extraNotif={extraNotif}
+        setExtraNotif={setExtraNotif}
       />
     </div>
   );

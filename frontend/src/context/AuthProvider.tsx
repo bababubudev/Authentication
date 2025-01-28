@@ -158,7 +158,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       changePassword,
       logout,
       verifyAuth,
-      error
+      error,
+      setError,
     }}>
       {children}
     </AuthContext.Provider>
