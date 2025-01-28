@@ -10,10 +10,9 @@ const user = process.env.POSTGRES_USER;
 const password = process.env.POSTGRES_PASSWORD;
 const database = process.env.POSTGRES_DB;
 
-const connectionString = `postgresql://${user}:${password}@localhost:5432/${database}`;
+const host = isProduction ? process.env.DB_HOST : "localhost";
+const connectionString = `postgresql://${user}:${password}@${host}:5432/${database}`;
 
-const pool = new Pool({
-  connectionString: isProduction ? process.env.DB_URL : connectionString,
-});
+const pool = new Pool({ connectionString });
 
 export default pool;
