@@ -60,6 +60,7 @@ POSTGRES_DB=your-db-name
 SERVER_PORT=6060
 CLIENT_URL=http://localhost:5173
 SESSION_SECRET=your-secure-session-secret
+DB_HOST=postgres
 ```
 
 ## CI/CD Pipeline
