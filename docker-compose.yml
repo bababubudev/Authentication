@@ -1,5 +1,6 @@
 services:
   postgres:
+    platform: linux/arm64
     image: ghcr.io/${GITHUB_USER}/nodeauth-postgres:latest
     restart: always
     ports:
@@ -10,6 +11,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
 
   backend:
+    platform: linux/arm64
     image: ghcr.io/${GITHUB_USER}/nodeauth-backend:latest
     restart: always
     ports:
@@ -26,6 +28,7 @@ services:
       - DB_NAME=${POSTGRES_DB}
 
   frontend:
+    platform: linux/arm64
     image: ghcr.io/${GITHUB_USER}/nodeauth-frontend:latest
     restart: always
     ports:
