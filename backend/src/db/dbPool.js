@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const { Pool } = pkg;
-const isProduction = process.env.NODE_ENV === "production"
 
 const pool = new Pool({
   user: process.env.POSTGRES_USER,
