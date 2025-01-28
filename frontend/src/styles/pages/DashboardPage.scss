@@ -48,15 +48,18 @@
 
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-      gap: 1rem;
+      gap: 3rem;
 
       border-radius: 0.5rem;
       border: 1px solid var(--col-primary);
 
-      >div {
-        display: grid;
-        gap: 0.25rem;
-        padding: 1rem;
+      >div>h2 {
+        margin-bottom: 1rem;
+      }
+
+      .email {
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .change-password-btn {
@@ -83,6 +86,7 @@
     .upper-part {
       display: flex;
       justify-content: space-between;
+      margin-bottom: 1rem;
 
       >button {
         border: none;

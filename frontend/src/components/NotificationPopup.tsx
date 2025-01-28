@@ -38,6 +38,11 @@ function NotificationPopup({ extraNotif }: NotificationPopupProp) {
   }, [notification, setNotification]);
 
   useEffect(() => {
+    if (extraNotif) {
+      setNotification(extraNotif);
+      return;
+    }
+
     if (error) {
       setNotification(error);
       return;
@@ -47,8 +52,6 @@ function NotificationPopup({ extraNotif }: NotificationPopupProp) {
       setNotification(state);
       return;
     }
-
-    setNotification(extraNotif);
   }, [state, error, extraNotif]);
 
   return (

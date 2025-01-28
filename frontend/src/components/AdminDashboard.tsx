@@ -29,7 +29,7 @@ function AdminDashboard({ notify }: AdminDashboardProps) {
     }
     catch (err) {
       console.error("Failed to fetch users", err);
-      notify({ message: "Failed to fetch users", state: Status.Success });
+      notify({ message: "Failed to fetch users", state: Status.Error });
     }
   };
 
@@ -46,10 +46,14 @@ function AdminDashboard({ notify }: AdminDashboardProps) {
         fetchUsers();
         notify({ message: "User status changed", state: Status.Success });
       }
+
+      if (response.status === 403) {
+        notify({ message: "Status change is forbidden", state: Status.Error });
+      }
     }
     catch (err) {
       console.error("Failed to update user status", err);
-      notify({ message: "Failed to update user status", state: Status.Success });
+      notify({ message: "Failed to update user status", state: Status.Error });
     }
   };
 
@@ -61,6 +65,10 @@ function AdminDashboard({ notify }: AdminDashboardProps) {
       });
 
       const data = await response.json();
+      if (data.data.length === 0) {
+        notify({ message: "Nothing in the log", state: Status.Error });
+      }
+
       setAuditLog(data.data);
     }
     catch (err) {
@@ -81,6 +89,10 @@ function AdminDashboard({ notify }: AdminDashboardProps) {
       if (response.ok) {
         notify({ message: "Username changed", state: Status.Success });
         fetchUsers();
+      }
+
+      if (response.status === 403) {
+        notify({ message: "Name change is forbidden", state: Status.Error });
       }
     }
     catch (err) {
@@ -136,21 +148,21 @@ function AdminDashboard({ notify }: AdminDashboardProps) {
             ))}
           </div>
         </div>
-        <div className="user-audit-log">
-          <h2>User Audit Log</h2>
-          <div className="logs">
-            {auditLog.length > 0 ?
-              auditLog.map(log => (
+        {auditLog.length > 0 &&
+          <div className="user-audit-log">
+            <h2>User Audit Log</h2>
+            <div className="logs">
+              {auditLog.map(log => (
                 <div key={log.id}>
                   <p>IP: {log.ip_address}</p>
                   <p>User Agent: {log.user_agent}</p>
                   <p>Created: {new Date(log.created_at).toLocaleString()}</p>
                 </div>
-              )) :
-              <p>Nothing in the audit</p>
-            }
+              ))}
+            </div>
           </div>
-        </div>
+        }
+
         {selectedUser &&
           <div className="user-detail-area" ref={detailRef}>
             <div className="upper-part">
